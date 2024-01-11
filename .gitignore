@@ -1,0 +1,8 @@
+contract/target
+.soroban
+node_modules
+.history
+.DS_Store
+contract/test_snapshots
+dist
+.env
