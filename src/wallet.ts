@@ -1,17 +1,17 @@
 import { Wallet } from 'contract-client'
 import * as StellarSdk from 'stellar-sdk'
 
-export type ZirisWalletProps = {
+export type ZirizWalletProps = {
 	network: 'testnet' | 'mainnet'
 	secret: string
 }
-class ZirisCMDWallet implements Wallet {
+class ZirizCMDWallet implements Wallet {
 	private network: 'testnet' | 'mainnet' = 'testnet'
 	private pubKey
 	private keypair: StellarSdk.Keypair
 	private server: StellarSdk.Horizon.Server
-	public static Wallet: ZirisCMDWallet
-	constructor({ network, secret }: ZirisWalletProps) {
+	public static Wallet: ZirizCMDWallet
+	constructor({ network, secret }: ZirizWalletProps) {
 		this.network = network
 		this.keypair = StellarSdk.Keypair.fromSecret(secret)
 		this.pubKey = this.keypair.publicKey()
@@ -23,7 +23,7 @@ class ZirisCMDWallet implements Wallet {
 			this.server = new StellarSdk.Horizon.Server('https://horizon.stellar.org')
 		}
 		this.server.loadAccount(this.pubKey)
-		ZirisCMDWallet.Wallet = this
+		ZirizCMDWallet.Wallet = this
 	}
 
 	async getBalances() {
@@ -59,15 +59,15 @@ class ZirisCMDWallet implements Wallet {
 	}
 
 	isConnected() {
-		return ZirisCMDWallet.Wallet.getConnectionStatus()
+		return ZirizCMDWallet.Wallet.getConnectionStatus()
 	}
 
 	isAllowed() {
-		return ZirisCMDWallet.Wallet.getAllowance()
+		return ZirizCMDWallet.Wallet.getAllowance()
 	}
 
 	getUserInfo() {
-		return ZirisCMDWallet.Wallet.getAccount()
+		return ZirizCMDWallet.Wallet.getAccount()
 	}
 
 	signTransaction(
@@ -87,14 +87,14 @@ class ZirisCMDWallet implements Wallet {
 					? StellarSdk.Networks.TESTNET
 					: StellarSdk.Networks.PUBLIC
 			)
-			return ZirisCMDWallet.Wallet.signTx(defaultTransaction, undefined)
+			return ZirizCMDWallet.Wallet.signTx(defaultTransaction, undefined)
 		}
 
 		const transaction = new StellarSdk.Transaction(
 			tx,
 			opts.networkPassphrase as string
 		)
-		return ZirisCMDWallet.Wallet.signTx(
+		return ZirizCMDWallet.Wallet.signTx(
 			transaction,
 			opts as StellarSdk.Horizon.Server.SubmitTransactionOptions
 		)
@@ -103,7 +103,7 @@ class ZirisCMDWallet implements Wallet {
 		entryXdr: string,
 		opts?: { accountToSign?: string | undefined } | undefined
 	) {
-		return ZirisCMDWallet.Wallet.signAuth()
+		return ZirizCMDWallet.Wallet.signAuth()
 	}
 
 	wallet() {
@@ -117,4 +117,4 @@ class ZirisCMDWallet implements Wallet {
 	}
 }
 
-export default ZirisCMDWallet
+export default ZirizCMDWallet

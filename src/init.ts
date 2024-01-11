@@ -1,13 +1,13 @@
-import { ZirisClient } from './client'
+import { ZirizClient } from './client'
 import * as dotenv from 'dotenv'
-import ZirisCMDWallet from './wallet'
+import ZirizCMDWallet from './wallet'
 import { AxiosError } from 'axios'
 dotenv.config()
 
 const main = async () => {
 	let secret = process.env.ADMIN_SECRET || ''
-	const cmdWallet = new ZirisCMDWallet({ network: 'testnet', secret: secret })
-	let client = new ZirisClient({
+	const cmdWallet = new ZirizCMDWallet({ network: 'testnet', secret: secret })
+	let client = new ZirizClient({
 		network: 'testnet',
 		wallet: cmdWallet.wallet(),
 	})

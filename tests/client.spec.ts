@@ -1,13 +1,13 @@
-import { ZirisClient } from '../src/client'
-import ZirisCMDWallet from '../src/wallet'
+import { ZirizClient } from '../src/client'
+import ZirizCMDWallet from '../src/wallet'
 import * as dotenv from 'dotenv'
 dotenv.config()
 
 describe('Integrity Test (Testnet)', () => {
 	let secret = process.env.ADMIN_SECRET || ''
-	const cmdWallet = new ZirisCMDWallet({ network: 'testnet', secret: secret })
+	const cmdWallet = new ZirizCMDWallet({ network: 'testnet', secret: secret })
 
-	let client = new ZirisClient({
+	let client = new ZirizClient({
 		network: 'testnet',
 		wallet: cmdWallet.wallet(),
 	})

@@ -1,5 +1,5 @@
 {
-	"name": "ziris-sdk",
+	"name": "ziriz-sdk",
 	"version": "1.0.0",
 	"description": "",
 	"scripts": {
@@ -9,11 +9,11 @@
 		"contract:init": "ts-node src/init.ts",
 		"contract:test": "cd contract && cargo test",
 		"contract:build": "cd contract && cargo build --target wasm32-unknown-unknown --release",
-		"contract:deploy-testnet": "cd contract && soroban contract deploy --wasm target/wasm32-unknown-unknown/release/ziris.wasm --source alice --network testnet",
-		"contract:link": "yarn remove contract-client && rm -rf contract-client  && cd contract && soroban contract bindings typescript --network testnet --contract-id CBVAY42U32AZ7KU3YRV6J4JIIYE2BWEC7JPPWNNAVEH7UXNR65MQA4P7 --output-dir ../contract-client",
+		"contract:deploy-testnet": "cd contract && soroban contract deploy --wasm target/wasm32-unknown-unknown/release/ziriz.wasm --source alice --network testnet",
+		"contract:link": "yarn remove contract-client && rm -rf contract-client  && cd contract && soroban contract bindings typescript --network testnet --contract-id CCJNBVS5R5PBALF3IHI4UTBSAME7EU4IKHOMOBNSJDWG3LXNPCVSLFNJ --output-dir ../contract-client",
 		"contract:add": "yarn add file:./contract-client"
 	},
-	"author": "alan@paras.id",
+	"author": "dev@paras.id",
 	"license": "ISC",
 	"devDependencies": {
 		"@types/jest": "^29.5.11",

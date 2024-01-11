@@ -1,6 +1,6 @@
 import { ClassOptions, Contract, Wallet, networks } from 'contract-client'
 
-export type ZirisClientProps = {
+export type ZirizClientProps = {
 	network: 'testnet' | 'mainnet'
 	wallet: Wallet
 }
@@ -10,10 +10,10 @@ interface NetworkConfig {
 	networkPassphrase: string
 }
 
-export class ZirisClient {
+export class ZirizClient {
 	private contract: Contract | null = null
 
-	constructor({ network, wallet }: ZirisClientProps) {
+	constructor({ network, wallet }: ZirizClientProps) {
 		const networkConfig: NetworkConfig =
 			'mainnet' in networks && network == 'mainnet'
 				? (networks.mainnet as NetworkConfig)

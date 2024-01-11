@@ -8,9 +8,9 @@ use soroban_sdk::{
     Address, Env, IntoVal, String, token::{TokenClient, StellarAssetClient, self},
 };
 
-fn create_ziris_app<'a>(env: &Env, admin: &Address, native_token: &Address) -> NonFungibleTokenClient<'a> {
+fn create_ziriz_app<'a>(env: &Env, admin: &Address, native_token: &Address) -> NonFungibleTokenClient<'a> {
     let contract = NonFungibleTokenClient::new(env, &env.register_contract(None, NonFungibleToken {}));
-    contract.initialize(admin, &"Ziris NFT".into_val(env), &"Ziris".into_val(env), &native_token);
+    contract.initialize(admin, &"Ziriz NFT".into_val(env), &"Ziriz".into_val(env), &native_token);
     contract
 }
 
@@ -31,11 +31,11 @@ fn test_create_series() {
     let user1 = Address::generate(&env);
     let user2 = Address::generate(&env);
     let (token, token_admin) = create_token(&env, &admin);
-    let nft = create_ziris_app(&env, &admin, &token.address);
+    let nft = create_ziriz_app(&env, &admin, &token.address);
 
-    nft.create_series(&user1, &String::from_str(&env,"https://www.ziris.com/1"), &1000);
-    nft.create_series(&user2,&String::from_str(&env,"https://www.ziris.com/2"), &1000);
-    nft.create_series(&user1, &String::from_str(&env,"https://www.ziris.com/3"), &1000);
+    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/1"), &1000);
+    nft.create_series(&user2,&String::from_str(&env,"https://www.ziriz.com/2"), &1000);
+    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/3"), &1000);
 
     assert_eq!(nft.number_of_series(), 3);
     std::println!("{}", env.logs().all().join("\n"));
@@ -48,9 +48,9 @@ fn test_creator() {
     let admin = Address::generate(&env);
     let user1 = Address::generate(&env);
     let (token, token_admin) = create_token(&env, &admin);
-    let nft = create_ziris_app(&env, &admin, &token.address);
+    let nft = create_ziriz_app(&env, &admin, &token.address);
 
-    nft.create_series(&user1, &String::from_str(&env,"https://www.ziris.com/1"), &1000);
+    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/1"), &1000);
 
     assert_eq!(nft.creator_of(&1), user1);
     std::println!("{}", env.logs().all().join("\n"));
@@ -65,9 +65,9 @@ fn test_buy_series_and_claim() {
     let user2 = Address::generate(&env);
     let user3 = Address::generate(&env);
     let (token, token_admin) = create_token(&env, &admin);
-    let nft = create_ziris_app(&env, &admin, &token.address);
+    let nft = create_ziriz_app(&env, &admin, &token.address);
 
-    nft.create_series(&user1, &String::from_str(&env,"https://www.ziris.com/1"), &1000);
+    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/1"), &1000);
     assert_eq!(nft.creator_of(&1), user1);
 
     token_admin.mint(&user2, &2000);
@@ -102,9 +102,9 @@ fn test_transfer() {
     let user1 = Address::generate(&env);
     let user2 = Address::generate(&env);
     let (token, token_admin) = create_token(&env, &admin);
-    let nft = create_ziris_app(&env, &admin, &token.address);
+    let nft = create_ziriz_app(&env, &admin, &token.address);
 
-    nft.create_series(&user1, &String::from_str(&env,"https://www.ziris.com/1"), &1000);
+    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/1"), &1000);
 
     assert_eq!(nft.creator_of(&1), user1);
 

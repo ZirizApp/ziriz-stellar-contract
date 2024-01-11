@@ -1,1 +1,1 @@
-## ZIRIS Client & Contract
+## ZIRIZ Client & Contract
