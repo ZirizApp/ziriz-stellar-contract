@@ -15,4 +15,4 @@ mod test;
 
 pub use crate::contract::NonFungibleTokenClient;
 
-// smartdeploy_sdk::core_riff!();
+smartdeploy_sdk::core_riff!();
