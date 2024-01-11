@@ -38,7 +38,7 @@ describe('Integrity Test (Testnet)', () => {
 			series_id: BigInt(1),
 		})
 
-		expect(info?.result?.price).toBeGreaterThanOrEqual(BigInt(1))
+		expect(info?.result?.price).toBeGreaterThanOrEqual(BigInt(100))
 	}, 20000)
 
 	test('claim reward', async () => {

@@ -24,6 +24,6 @@ pub enum UserDataKey {
     TokenOwner(u128),
     OwnedTokens(Address),
     Balance(Address),
-    SeriesBalance(Address),
+    SeriesBalance(Address, u128),
     Share(Address),
 }

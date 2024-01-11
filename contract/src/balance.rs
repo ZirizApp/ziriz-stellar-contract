@@ -57,15 +57,15 @@ pub fn increment_balance(e: &Env, id: &Address){
     e.storage().instance().set(&key, &(read_balance(e, id) + 1));
 }
 
-pub fn read_series_balance(e: &Env, id: &Address) -> u128{
-    let key = UserDataKey::SeriesBalance(id.clone());
+pub fn read_series_balance(e: &Env, account: &Address, id: u128) -> u128{
+    let key = UserDataKey::SeriesBalance(account.clone(), id);
     match e.storage().instance().get::<UserDataKey, u128>(&key) {
         Some(balance) => balance,
         None => 0,
     }
 }
 
-pub fn increment_series_balance(e: &Env, id: &Address){
-    let key = UserDataKey::SeriesBalance(id.clone());
-    e.storage().instance().set(&key, &(read_series_balance(e, id) + 1));
+pub fn increment_series_balance(e: &Env, account: &Address, id: u128){
+    let key = UserDataKey::SeriesBalance(account.clone(), id);
+    e.storage().instance().set(&key, &(read_series_balance(e, account, id) + 1));
 }

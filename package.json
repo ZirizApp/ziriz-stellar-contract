@@ -10,7 +10,7 @@
 		"contract:test": "cd contract && cargo test",
 		"contract:build": "cd contract && cargo build --target wasm32-unknown-unknown --release",
 		"contract:deploy-testnet": "cd contract && soroban contract deploy --wasm target/wasm32-unknown-unknown/release/ziriz.wasm --source alice --network testnet",
-		"contract:link": "yarn remove contract-client && rm -rf contract-client  && cd contract && soroban contract bindings typescript --network testnet --contract-id CCJNBVS5R5PBALF3IHI4UTBSAME7EU4IKHOMOBNSJDWG3LXNPCVSLFNJ --output-dir ../contract-client",
+		"contract:link": "yarn remove contract-client && rm -rf contract-client  && cd contract && soroban contract bindings typescript --network testnet --contract-id CCSIZSPJU5MSE2FJGYYLFVGP6S42LLSW2YJPAKASRIW72D6QS7YUR4OF --output-dir ../contract-client",
 		"contract:add": "yarn add file:./contract-client"
 	},
 	"author": "dev@paras.id",

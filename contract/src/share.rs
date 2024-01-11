@@ -23,7 +23,7 @@ pub fn distribute_share(e: &Env, id: u128, amount: &u128){
   let fans = read_fans(&e, id);
   let total_share = fans.len() as u128;
   for fan in fans.iter() {
-    let balance = read_series_balance(e, &fan);
+    let balance = read_series_balance(e, &fan, id);
     add_share(&e, &fan, ( (amount / total_share) * balance)  as u128);
   }
 }

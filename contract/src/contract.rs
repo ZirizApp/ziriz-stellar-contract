@@ -134,7 +134,7 @@ impl NonFungibleTokenTrait for NonFungibleToken {
 
        map_token_to_series(&env, token_id, &series_id);
        increment_balance(&env, &buyer);
-       increment_series_balance(&env, &buyer);
+       increment_series_balance(&env, &buyer, series_id);
        write_token_owner(&env, token_id, &buyer);
        map_token_to_owner(&env, token_id, &buyer);
        increment_series_sales(&env, series_id);
