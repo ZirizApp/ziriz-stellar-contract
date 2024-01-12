@@ -19,6 +19,7 @@ describe('Integrity Test (Testnet)', () => {
 			creator: (await cmdWallet.getAccount()).publicKey,
 			uri: 'test-uri',
 			base_price: BigInt(100),
+      price_curve: BigInt(5),
 		})
 
 		await createSeries?.signAndSend()

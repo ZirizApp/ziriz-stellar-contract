@@ -26,3 +26,16 @@ pub fn write_token_owner(e: &Env, id: u128, owner: &Address) {
     let key = UserDataKey::TokenOwner(id);
     e.storage().persistent().set(&key, owner);
 }
+
+pub fn read_creator_curved(e: &Env, id: u128) -> u128 {
+    let key = UserDataKey::CreatorCurved(id);
+    match e.storage().persistent().get(&key) {
+        Some(curved) => curved,
+        None => 0,
+    }
+}
+
+pub fn write_creator_curved(e: &Env, id: u128, curved: u128) {
+    let key = UserDataKey::CreatorCurved(id);
+    e.storage().persistent().set(&key, &curved);
+}

@@ -20,7 +20,7 @@ pub trait NonFungibleTokenTrait{
 
   fn number_of_series(env: Env) -> u128;
 
-  fn create_series(env: Env, creator: Address, uri: String, base_price: u128);
+  fn create_series(env: Env, creator: Address, uri: String, base_price: u128, price_curve: u128);
 
   fn series_info(env: Env, series_id: u128) -> Series;
 

@@ -30,7 +30,7 @@ if (typeof window !== 'undefined') {
 export const networks = {
     testnet: {
         networkPassphrase: "Test SDF Network ; September 2015",
-        contractId: "CCRD7THAYCNJYHRCRCA7UGFODMNK7COI5U6ICFYENZRI4XXLIMHV2DLM",
+        contractId: "CAQJGLCSEUYGD4VMIR6UQ7NNKNICRHNQG4N7LSPVDJH626QNOSRVDD3O",
     }
 } as const
 
@@ -42,7 +42,7 @@ export type DataKey = {tag: "Admin", values: void} | {tag: "Name", values: void}
 /**
     
     */
-export type UserDataKey = {tag: "Creator", values: readonly [u128]} | {tag: "TokenOwner", values: readonly [u128]} | {tag: "OwnedTokens", values: readonly [string]} | {tag: "Balance", values: readonly [string]} | {tag: "SeriesBalance", values: readonly [string, u128]} | {tag: "Share", values: readonly [string]};
+export type UserDataKey = {tag: "Creator", values: readonly [u128]} | {tag: "CreatorCurved", values: readonly [u128]} | {tag: "TokenOwner", values: readonly [u128]} | {tag: "OwnedTokens", values: readonly [string]} | {tag: "Balance", values: readonly [string]} | {tag: "SeriesBalance", values: readonly [string, u128]} | {tag: "Share", values: readonly [string]};
 
 /**
     
@@ -73,6 +73,10 @@ creator: string;
   /**
     
     */
+curve: u128;
+  /**
+    
+    */
 metadata: Metadata;
   /**
     
@@ -99,7 +103,7 @@ export class Contract {
         "AAAAAAAAAAAAAAAMZ2V0X21ldGFkYXRhAAAAAQAAAAAAAAAIdG9rZW5faWQAAAAKAAAAAQAAB9AAAAAITWV0YWRhdGE=",
         "AAAAAAAAAAAAAAAGc3VwcGx5AAAAAAAAAAAAAQAAAAo=",
         "AAAAAAAAAAAAAAAQbnVtYmVyX29mX3NlcmllcwAAAAAAAAABAAAACg==",
-        "AAAAAAAAAAAAAAANY3JlYXRlX3NlcmllcwAAAAAAAAMAAAAAAAAAB2NyZWF0b3IAAAAAEwAAAAAAAAADdXJpAAAAABAAAAAAAAAACmJhc2VfcHJpY2UAAAAAAAoAAAAA",
+        "AAAAAAAAAAAAAAANY3JlYXRlX3NlcmllcwAAAAAAAAQAAAAAAAAAB2NyZWF0b3IAAAAAEwAAAAAAAAADdXJpAAAAABAAAAAAAAAACmJhc2VfcHJpY2UAAAAAAAoAAAAAAAAAC3ByaWNlX2N1cnZlAAAAAAoAAAAA",
         "AAAAAAAAAAAAAAALc2VyaWVzX2luZm8AAAAAAQAAAAAAAAAJc2VyaWVzX2lkAAAAAAAACgAAAAEAAAfQAAAABlNlcmllcwAA",
         "AAAAAAAAAAAAAAAMc2VyaWVzX3NhbGVzAAAAAQAAAAAAAAAJc2VyaWVzX2lkAAAAAAAACgAAAAEAAAAK",
         "AAAAAAAAAAAAAAAKY3JlYXRvcl9vZgAAAAAAAQAAAAAAAAAJc2VyaWVzX2lkAAAAAAAACgAAAAEAAAAT",
@@ -112,9 +116,9 @@ export class Contract {
         "AAAAAAAAAAAAAAAFb3duZXIAAAAAAAABAAAAAAAAAAh0b2tlbl9pZAAAAAoAAAABAAAAEw==",
         "AAAAAAAAAAAAAAALY2xhaW1fc2hhcmUAAAAAAQAAAAAAAAAHYWNjb3VudAAAAAATAAAAAA==",
         "AAAAAgAAAAAAAAAAAAAAB0RhdGFLZXkAAAAADAAAAAAAAAAAAAAABUFkbWluAAAAAAAAAAAAAAAAAAAETmFtZQAAAAAAAAAAAAAABlN5bWJvbAAAAAAAAQAAAAAAAAAITWV0YWRhdGEAAAABAAAACgAAAAEAAAAAAAAABU93bmVyAAAAAAAAAQAAAAoAAAABAAAAAAAAAAVUb2tlbgAAAAAAAAEAAAAKAAAAAQAAAAAAAAAFUHJpY2UAAAAAAAABAAAACgAAAAAAAAAAAAAAC05hdGl2ZVRva2VuAAAAAAAAAAAAAAAABlNlcmllcwAAAAAAAQAAAAAAAAALU2VyaWVzU2FsZXMAAAAAAQAAAAoAAAABAAAAAAAAAARGYW5zAAAAAQAAAAoAAAAAAAAAAAAAAAZTdXBwbHkAAA==",
-        "AAAAAgAAAAAAAAAAAAAAC1VzZXJEYXRhS2V5AAAAAAYAAAABAAAAAAAAAAdDcmVhdG9yAAAAAAEAAAAKAAAAAQAAAAAAAAAKVG9rZW5Pd25lcgAAAAAAAQAAAAoAAAABAAAAAAAAAAtPd25lZFRva2VucwAAAAABAAAAEwAAAAEAAAAAAAAAB0JhbGFuY2UAAAAAAQAAABMAAAABAAAAAAAAAA1TZXJpZXNCYWxhbmNlAAAAAAAAAgAAABMAAAAKAAAAAQAAAAAAAAAFU2hhcmUAAAAAAAABAAAAEw==",
+        "AAAAAgAAAAAAAAAAAAAAC1VzZXJEYXRhS2V5AAAAAAcAAAABAAAAAAAAAAdDcmVhdG9yAAAAAAEAAAAKAAAAAQAAAAAAAAANQ3JlYXRvckN1cnZlZAAAAAAAAAEAAAAKAAAAAQAAAAAAAAAKVG9rZW5Pd25lcgAAAAAAAQAAAAoAAAABAAAAAAAAAAtPd25lZFRva2VucwAAAAABAAAAEwAAAAEAAAAAAAAAB0JhbGFuY2UAAAAAAQAAABMAAAABAAAAAAAAAA1TZXJpZXNCYWxhbmNlAAAAAAAAAgAAABMAAAAKAAAAAQAAAAAAAAAFU2hhcmUAAAAAAAABAAAAEw==",
         "AAAAAQAAAAAAAAAAAAAACE1ldGFkYXRhAAAAAwAAAAAAAAANZGF0YV9maWxlX3VyaQAAAAAAABAAAAAAAAAAFGxvbmdfZGVzY3JpcHRpb25fdXJpAAAAEAAAAAAAAAAVc2hvcnRfZGVzY3JpcHRpb25fdXJpAAAAAAAAEA==",
-        "AAAAAQAAAAAAAAAAAAAABlNlcmllcwAAAAAAAwAAAAAAAAAHY3JlYXRvcgAAAAATAAAAAAAAAAhtZXRhZGF0YQAAB9AAAAAITWV0YWRhdGEAAAAAAAAABXByaWNlAAAAAAAACg==",
+        "AAAAAQAAAAAAAAAAAAAABlNlcmllcwAAAAAABAAAAAAAAAAHY3JlYXRvcgAAAAATAAAAAAAAAAVjdXJ2ZQAAAAAAAAoAAAAAAAAACG1ldGFkYXRhAAAH0AAAAAhNZXRhZGF0YQAAAAAAAAAFcHJpY2UAAAAAAAAK",
         "AAAAAAAAACFSZXR1cm5zIHRoZSBvd25lciBvZiB0aGUgY29udHJhY3QAAAAAAAAJb3duZXJfZ2V0AAAAAAAAAAAAAAEAAAPoAAAAEw==",
         "AAAAAAAAAGhTZXRzIHRoZSBvd25lciBvZiB0aGUgY29udHJhY3QuIElmIG9uZSBhbHJlYWR5IHNldCBpdCB0cmFuc2ZlcnMgaXQgdG8gdGhlIG5ldyBvd25lciwgaWYgc2lnbmVkIGJ5IG93bmVyLgAAAAlvd25lcl9zZXQAAAAAAAABAAAAAAAAAAluZXdfb3duZXIAAAAAAAATAAAAAA==",
         "AAAAAAAAACRSZWRlcGxveSB0aGUgY29udHJhY3QgdG8gYSBXYXNtIGhhc2gAAAAIcmVkZXBsb3kAAAABAAAAAAAAAAl3YXNtX2hhc2gAAAAAAAPuAAAAIAAAAAA="
@@ -344,7 +348,7 @@ export class Contract {
         /**
     * Construct and simulate a create_series transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
     */
-    createSeries = async ({creator, uri, base_price}: {creator: string, uri: string, base_price: u128}, options: {
+    createSeries = async ({creator, uri, base_price, price_curve}: {creator: string, uri: string, base_price: u128, price_curve: u128}, options: {
         /**
          * The fee to pay for the transaction. Default: 100.
          */
@@ -352,7 +356,7 @@ export class Contract {
     } = {}) => {
         return await AssembledTransaction.fromSimulation({
             method: 'create_series',
-            args: this.spec.funcArgsToScVals("create_series", {creator: new Address(creator), uri, base_price}),
+            args: this.spec.funcArgsToScVals("create_series", {creator: new Address(creator), uri, base_price, price_curve}),
             ...options,
             ...this.options,
             errorTypes: Errors,

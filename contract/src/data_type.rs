@@ -14,4 +14,5 @@ pub struct Series {
   pub creator: Address,
   pub metadata: Metadata,
   pub price: u128,
+  pub curve: u128,
 }

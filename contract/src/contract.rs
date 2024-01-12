@@ -1,7 +1,7 @@
 use crate::admin::{has_admin, read_admin, write_admin};
 use crate::data_type::{Metadata, Series};
 use crate::fans::{is_already_fan, add_fans};
-use crate::owner::{read_creator, write_creator, write_token_owner, read_token_owner};
+use crate::owner::{read_creator, write_creator, write_token_owner, read_token_owner, write_creator_curved};
 use crate::metadata::{
     write_name, read_name, 
     write_symbol, read_symbol, 
@@ -61,7 +61,7 @@ impl NonFungibleTokenTrait for NonFungibleToken {
         read_series(&env)
     }
     
-    fn create_series(env: Env, creator: Address, uri: String, base_price: u128) {
+    fn create_series(env: Env, creator: Address, uri: String, base_price: u128, price_curve: u128) {
         creator.require_auth();
 
         assert!(base_price > 0, "Base price must be greater than 0");
@@ -76,6 +76,7 @@ impl NonFungibleTokenTrait for NonFungibleToken {
         };
         write_metadata(&env, next_id.clone(), &metadata);
         write_series_price(&env, next_id.clone(), base_price);
+        write_creator_curved(&env, next_id.clone(), price_curve);
 
         log!(
             &env,

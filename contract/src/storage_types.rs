@@ -21,6 +21,7 @@ pub enum DataKey {
 #[contracttype]
 pub enum UserDataKey {
     Creator(u128),
+    CreatorCurved(u128),
     TokenOwner(u128),
     OwnedTokens(Address),
     Balance(Address),
