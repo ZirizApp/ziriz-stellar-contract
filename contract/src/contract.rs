@@ -13,7 +13,7 @@ use crate::share::{read_share, distribute_share, remove_share};
 use crate::utils::NonFungibleTokenTrait;
 use soroban_sdk::token::TokenClient;
 use soroban_sdk::{
-    contract, contractimpl, Address, Env, String, Vec
+    contract, contractimpl, Address, Env, String, Vec, log
 };
 
 #[contract]
@@ -69,12 +69,20 @@ impl NonFungibleTokenTrait for NonFungibleToken {
         
         let next_id = increment_series(&env);
         write_creator(&env, next_id.clone(), &creator);
-        write_metadata(&env, next_id.clone(), &Metadata{
-            short_description_uri: uri.clone(),
-            long_description_uri: uri.clone(),
-            data_file_uri: uri.clone(),
-        });
+        let metadata = Metadata{
+          short_description_uri: uri.clone(),
+          long_description_uri: uri.clone(),
+          data_file_uri: uri.clone(),
+        };
+        write_metadata(&env, next_id.clone(), &metadata);
         write_series_price(&env, next_id.clone(), base_price);
+
+        log!(
+            &env,
+            "Series {} created by {} with base price {}",
+            next_id,
+            creator,
+            base_price)
     }
 
     fn series_info(env: Env, series_id: u128) -> Series{
@@ -139,6 +147,14 @@ impl NonFungibleTokenTrait for NonFungibleToken {
        map_token_to_owner(&env, token_id, &buyer);
        increment_series_sales(&env, series_id);
        add_fans(&env, series_id, &buyer);
+
+       log!(
+           &env,
+           "Series {} Token {} bought by {} for {}",
+           series_id,
+           token_id,
+           buyer,
+           total_price);
     }
 
     fn owner(env: Env, token_id: u128) -> Address{
@@ -155,5 +171,10 @@ impl NonFungibleTokenTrait for NonFungibleToken {
       let share = read_share(&env, &account);
       token_client.transfer(&env.current_contract_address(), &account, &(share as i128));
       remove_share(&env, &account, share);
+      log!(
+          &env,
+          "Share {} claimed by {}",
+          share,
+          account);
     }
 }

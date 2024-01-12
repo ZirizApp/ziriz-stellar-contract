@@ -1,7 +1,7 @@
 use core::ops::Div;
 
 use soroban_sdk::{Env, Address};
-use crate::{storage_types::{DataKey, UserDataKey}, fans::read_fans, balance::read_series_balance};
+use crate::{storage_types::UserDataKey, fans::read_fans, balance::read_series_balance};
 
 pub fn read_share(e: &Env, address: &Address) -> u128{
   let key = UserDataKey::Share(address.clone());

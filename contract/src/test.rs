@@ -5,7 +5,7 @@ extern crate std;
 use crate::{contract::NonFungibleToken, NonFungibleTokenClient};
 use soroban_sdk::{
     testutils::{Address as _, Logs},
-    Address, Env, IntoVal, String, token::{TokenClient, StellarAssetClient, self},
+    Address, Env, IntoVal, String, token::{TokenClient, StellarAssetClient},
 };
 
 fn create_ziriz_app<'a>(env: &Env, admin: &Address, native_token: &Address) -> NonFungibleTokenClient<'a> {
