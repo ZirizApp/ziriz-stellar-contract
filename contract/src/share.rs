@@ -1,7 +1,7 @@
 use core::ops::Div;
 
 use soroban_sdk::{Env, Address};
-use crate::{storage_types::UserDataKey, fans::read_fans, balance::read_series_balance};
+use crate::{storage_types::UserDataKey, fans::read_fans, balance::read_series_balance, series::read_series_sales};
 
 pub fn read_share(e: &Env, address: &Address) -> u128{
   let key = UserDataKey::Share(address.clone());
@@ -23,7 +23,7 @@ pub fn remove_share(e: &Env, address: &Address, amount: u128){
 
 pub fn distribute_share(e: &Env, id: u128, amount: &u128){
   let fans = read_fans(&e, id);
-  let total_share = fans.len() as u128;
+  let total_share = read_series_sales(&e, id);
   for fan in fans.iter() {
     let balance = read_series_balance(e, &fan, id);
     let share_per_token = amount.div(total_share);

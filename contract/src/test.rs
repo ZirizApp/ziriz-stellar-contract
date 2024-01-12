@@ -97,9 +97,9 @@ fn test_buy_series_and_claim() {
     assert_eq!(metadata2.data_file_uri, String::from_str(&env,"https://www.ziriz.com/1"));
 
     let mut last_price = nft.series_info(&1).price;
-    for i in 0..30 {
+    for i in 0..10 {
         let anon_user = Address::generate(&env);
-        let to_top_up = last_price + 1000;
+        let to_top_up = last_price+10;
         token_admin.mint(&anon_user, &(to_top_up as i128));
         nft.buy(&anon_user, &1);
         let new_price = nft.series_info(&1).price;

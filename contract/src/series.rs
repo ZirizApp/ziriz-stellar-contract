@@ -1,18 +1,23 @@
+use core::ops::Mul;
+
 use soroban_sdk::Env;
 use crate::{data_type::Series, metadata::read_metadata, owner::read_creator, storage_types::DataKey};
 
 pub fn calculate_price(env: &Env, id: u128) -> (u128, u128, u128) {
-    let fan_base_price = 10;
-    let decay_rate : i128= 2;
+    let fan_base_price = 10.0f64;
+    let decay_rate : f64 = 0.9f64;
     let creator_coefficient = 5;
     let price = read_series_price(&env, id);
     let sales = read_series_sales(&env, id);
     let artist_cut = price + (creator_coefficient * sales ) as u128;
-    let mut fan_cut = 0;
+    let mut fan_cut = 0.0f64;
     if sales > 0 {
-        fan_cut = (fan_base_price * (decay_rate.pow(sales as u32)-1))/ decay_rate - 1;
+        let drn = (decay_rate.powi(sales as i32)) - 1.0;
+        let drmimn1 = decay_rate - 1.0;
+        let current_ratio = drn / drmimn1;
+        fan_cut = fan_base_price.mul(decay_rate).mul(current_ratio);
     }
-    let total_price = artist_cut + (fan_cut as u128);
+    let total_price = artist_cut + (fan_cut.ceil() as u128);
     (artist_cut, fan_cut as u128, total_price)
 }
 
