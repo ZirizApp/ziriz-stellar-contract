@@ -15,7 +15,7 @@ pub fn read_native_token(e: &Env) -> Address{
 }
 
 pub fn read_supply(e: &Env) -> u128 {
-    let key = DataKey::Series;
+    let key = DataKey::Supply;
     match e.storage().instance().get::<DataKey, u128>(&key) {
         Some(balance) => balance,
         None => 0,
@@ -23,7 +23,7 @@ pub fn read_supply(e: &Env) -> u128 {
 }
 
 pub fn increment_supply(e: &Env) -> u128{
-    let key = DataKey::Series;
+    let key = DataKey::Supply;
     let next_supply = read_supply(e) + 1;
     e.storage().instance().set(&key, &next_supply);
     next_supply
@@ -39,7 +39,7 @@ pub fn read_series(e: &Env) -> u128 {
 
 pub fn increment_series(e: &Env) -> u128{
   let key = DataKey::Series;
-  let next_supply = read_supply(e) + 1;
+  let next_supply = read_series(e) + 1;
   e.storage().instance().set(&key, &next_supply);
   next_supply
 }

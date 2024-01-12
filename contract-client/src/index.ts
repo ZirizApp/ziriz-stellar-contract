@@ -30,7 +30,7 @@ if (typeof window !== 'undefined') {
 export const networks = {
     testnet: {
         networkPassphrase: "Test SDF Network ; September 2015",
-        contractId: "CCSIZSPJU5MSE2FJGYYLFVGP6S42LLSW2YJPAKASRIW72D6QS7YUR4OF",
+        contractId: "CCRD7THAYCNJYHRCRCA7UGFODMNK7COI5U6ICFYENZRI4XXLIMHV2DLM",
     }
 } as const
 
@@ -114,7 +114,10 @@ export class Contract {
         "AAAAAgAAAAAAAAAAAAAAB0RhdGFLZXkAAAAADAAAAAAAAAAAAAAABUFkbWluAAAAAAAAAAAAAAAAAAAETmFtZQAAAAAAAAAAAAAABlN5bWJvbAAAAAAAAQAAAAAAAAAITWV0YWRhdGEAAAABAAAACgAAAAEAAAAAAAAABU93bmVyAAAAAAAAAQAAAAoAAAABAAAAAAAAAAVUb2tlbgAAAAAAAAEAAAAKAAAAAQAAAAAAAAAFUHJpY2UAAAAAAAABAAAACgAAAAAAAAAAAAAAC05hdGl2ZVRva2VuAAAAAAAAAAAAAAAABlNlcmllcwAAAAAAAQAAAAAAAAALU2VyaWVzU2FsZXMAAAAAAQAAAAoAAAABAAAAAAAAAARGYW5zAAAAAQAAAAoAAAAAAAAAAAAAAAZTdXBwbHkAAA==",
         "AAAAAgAAAAAAAAAAAAAAC1VzZXJEYXRhS2V5AAAAAAYAAAABAAAAAAAAAAdDcmVhdG9yAAAAAAEAAAAKAAAAAQAAAAAAAAAKVG9rZW5Pd25lcgAAAAAAAQAAAAoAAAABAAAAAAAAAAtPd25lZFRva2VucwAAAAABAAAAEwAAAAEAAAAAAAAAB0JhbGFuY2UAAAAAAQAAABMAAAABAAAAAAAAAA1TZXJpZXNCYWxhbmNlAAAAAAAAAgAAABMAAAAKAAAAAQAAAAAAAAAFU2hhcmUAAAAAAAABAAAAEw==",
         "AAAAAQAAAAAAAAAAAAAACE1ldGFkYXRhAAAAAwAAAAAAAAANZGF0YV9maWxlX3VyaQAAAAAAABAAAAAAAAAAFGxvbmdfZGVzY3JpcHRpb25fdXJpAAAAEAAAAAAAAAAVc2hvcnRfZGVzY3JpcHRpb25fdXJpAAAAAAAAEA==",
-        "AAAAAQAAAAAAAAAAAAAABlNlcmllcwAAAAAAAwAAAAAAAAAHY3JlYXRvcgAAAAATAAAAAAAAAAhtZXRhZGF0YQAAB9AAAAAITWV0YWRhdGEAAAAAAAAABXByaWNlAAAAAAAACg=="
+        "AAAAAQAAAAAAAAAAAAAABlNlcmllcwAAAAAAAwAAAAAAAAAHY3JlYXRvcgAAAAATAAAAAAAAAAhtZXRhZGF0YQAAB9AAAAAITWV0YWRhdGEAAAAAAAAABXByaWNlAAAAAAAACg==",
+        "AAAAAAAAACFSZXR1cm5zIHRoZSBvd25lciBvZiB0aGUgY29udHJhY3QAAAAAAAAJb3duZXJfZ2V0AAAAAAAAAAAAAAEAAAPoAAAAEw==",
+        "AAAAAAAAAGhTZXRzIHRoZSBvd25lciBvZiB0aGUgY29udHJhY3QuIElmIG9uZSBhbHJlYWR5IHNldCBpdCB0cmFuc2ZlcnMgaXQgdG8gdGhlIG5ldyBvd25lciwgaWYgc2lnbmVkIGJ5IG93bmVyLgAAAAlvd25lcl9zZXQAAAAAAAABAAAAAAAAAAluZXdfb3duZXIAAAAAAAATAAAAAA==",
+        "AAAAAAAAACRSZWRlcGxveSB0aGUgY29udHJhY3QgdG8gYSBXYXNtIGhhc2gAAAAIcmVkZXBsb3kAAAABAAAAAAAAAAl3YXNtX2hhc2gAAAAAAAPuAAAAIAAAAAA="
         ]);
     }
     private readonly parsers = {
@@ -137,7 +140,10 @@ export class Contract {
         transferFrom: () => {},
         buy: () => {},
         owner: (result: XDR_BASE64): string => this.spec.funcResToNative("owner", result),
-        claimShare: () => {}
+        claimShare: () => {},
+        ownerGet: (result: XDR_BASE64): Option<string> => this.spec.funcResToNative("owner_get", result),
+        ownerSet: () => {},
+        redeploy: () => {}
     };
     private txFromJSON = <T>(json: string): AssembledTransaction<T> => {
         const { method, ...tx } = JSON.parse(json)
@@ -170,7 +176,10 @@ export class Contract {
         transferFrom: this.txFromJSON<ReturnType<typeof this.parsers['transferFrom']>>,
         buy: this.txFromJSON<ReturnType<typeof this.parsers['buy']>>,
         owner: this.txFromJSON<ReturnType<typeof this.parsers['owner']>>,
-        claimShare: this.txFromJSON<ReturnType<typeof this.parsers['claimShare']>>
+        claimShare: this.txFromJSON<ReturnType<typeof this.parsers['claimShare']>>,
+        ownerGet: this.txFromJSON<ReturnType<typeof this.parsers['ownerGet']>>,
+        ownerSet: this.txFromJSON<ReturnType<typeof this.parsers['ownerSet']>>,
+        redeploy: this.txFromJSON<ReturnType<typeof this.parsers['redeploy']>>
     }
         /**
     * Construct and simulate a initialize transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
@@ -568,6 +577,66 @@ export class Contract {
             ...this.options,
             errorTypes: Errors,
             parseResultXdr: this.parsers['claimShare'],
+        });
+    }
+
+
+        /**
+    * Construct and simulate a owner_get transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.Returns the owner of the contract
+    */
+    ownerGet = async (options: {
+        /**
+         * The fee to pay for the transaction. Default: 100.
+         */
+        fee?: number,
+    } = {}) => {
+        return await AssembledTransaction.fromSimulation({
+            method: 'owner_get',
+            args: this.spec.funcArgsToScVals("owner_get", {}),
+            ...options,
+            ...this.options,
+            errorTypes: Errors,
+            parseResultXdr: this.parsers['ownerGet'],
+        });
+    }
+
+
+        /**
+    * Construct and simulate a owner_set transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.Sets the owner of the contract. If one already set it transfers it to the new owner, if signed by owner.
+    */
+    ownerSet = async ({new_owner}: {new_owner: string}, options: {
+        /**
+         * The fee to pay for the transaction. Default: 100.
+         */
+        fee?: number,
+    } = {}) => {
+        return await AssembledTransaction.fromSimulation({
+            method: 'owner_set',
+            args: this.spec.funcArgsToScVals("owner_set", {new_owner: new Address(new_owner)}),
+            ...options,
+            ...this.options,
+            errorTypes: Errors,
+            parseResultXdr: this.parsers['ownerSet'],
+        });
+    }
+
+
+        /**
+    * Construct and simulate a redeploy transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.Redeploy the contract to a Wasm hash
+    */
+    redeploy = async ({wasm_hash}: {wasm_hash: Buffer}, options: {
+        /**
+         * The fee to pay for the transaction. Default: 100.
+         */
+        fee?: number,
+    } = {}) => {
+        return await AssembledTransaction.fromSimulation({
+            method: 'redeploy',
+            args: this.spec.funcArgsToScVals("redeploy", {wasm_hash}),
+            ...options,
+            ...this.options,
+            errorTypes: Errors,
+            parseResultXdr: this.parsers['redeploy'],
         });
     }
 

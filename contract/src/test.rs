@@ -77,12 +77,14 @@ fn test_buy_series_and_claim() {
     debug_assert_eq!(token.balance(&user2) , 1000);
     assert_eq!(nft.balance(&user2), 1);
     assert_eq!(nft.series_sales(&1), 1);
+    assert_eq!(nft.owner(&1), user2);
 
     assert!(nft.series_info(&1).price > 1000);
     token_admin.mint(&user3, &4000);
     assert_eq!(token.balance(&user3), 4000);
     nft.buy(&user3, &1);
     assert_eq!(nft.series_sales(&1), 2);
+    assert_eq!(nft.owner(&2), user3);
 
     assert!(nft.share_balance(&user2)>0);
 
