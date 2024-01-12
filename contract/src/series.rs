@@ -4,7 +4,7 @@ use soroban_sdk::Env;
 use crate::{data_type::Series, metadata::read_metadata, owner::{read_creator, read_creator_curved}, storage_types::DataKey};
 
 pub fn calculate_price(env: &Env, id: u128) -> (u128, u128, u128) {
-    let fan_base_price = 10_000__000; // 1 XLM
+    let fan_base_price = 10_000_000; // 1 XLM
     let decay_rate: u128 = 9_000; // 0.9
     let creator_coefficient = read_creator_curved(&env, id);
     let price = read_series_price(&env, id);
