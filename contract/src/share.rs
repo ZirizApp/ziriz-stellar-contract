@@ -5,7 +5,7 @@ use crate::{storage_types::UserDataKey, fans::read_fans, balance::read_series_ba
 
 pub fn read_share(e: &Env, address: &Address) -> u128{
   let key = UserDataKey::Share(address.clone());
-  match e.storage().instance().get::<UserDataKey, u128>(&key) {
+  match e.storage().persistent().get::<UserDataKey, u128>(&key) {
       Some(share) => share,
       None => 0,
   }
@@ -13,12 +13,12 @@ pub fn read_share(e: &Env, address: &Address) -> u128{
 
 pub fn add_share(e: &Env, address: &Address, amount: u128){
   let key = UserDataKey::Share(address.clone());
-  e.storage().instance().set(&key, &(read_share(e, address) + amount));
+  e.storage().persistent().set(&key, &(read_share(e, address) + amount));
 }
 
 pub fn remove_share(e: &Env, address: &Address, amount: u128){
   let key = UserDataKey::Share(address.clone());
-  e.storage().instance().set(&key, &(read_share(e, address) - amount));
+  e.storage().persistent().set(&key, &(read_share(e, address) - amount));
 }
 
 pub fn distribute_share(e: &Env, id: u128, amount: &u128){

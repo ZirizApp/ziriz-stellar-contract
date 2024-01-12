@@ -13,7 +13,7 @@ pub fn write_name(e: &Env, name: &String) {
 }
 
 pub fn read_symbol(e: &Env) -> String {
-    let key = DataKey::Name;
+    let key = DataKey::Symbol;
     e.storage().instance().get(&key).unwrap()
 }
 
@@ -24,12 +24,12 @@ pub fn write_symbol(e: &Env, symbol: &String) {
 
 pub fn read_metadata(e: &Env, id: u128) -> Metadata {
     let key = DataKey::Metadata(id);
-    e.storage().instance().get(&key).unwrap()
+    e.storage().persistent().get(&key).unwrap()
 }
 
 pub fn write_metadata(e: &Env, id: u128, metadata: &Metadata) {
     let key = DataKey::Metadata(id);
-    e.storage().instance().set(&key, metadata);
+    e.storage().persistent().set(&key, metadata);
 }
 
 pub fn map_token_to_series(e: &Env, id: u128, series_id: &u128) {
@@ -44,7 +44,7 @@ pub fn get_series_id(e: &Env, id: u128) -> u128 {
 
 pub fn read_owned_tokens(e: &Env, owner: &Address) -> Vec<u128> {
     let key = UserDataKey::OwnedTokens(owner.clone());
-    let tokens = e.storage().instance().get(&key);
+    let tokens = e.storage().persistent().get(&key);
     match tokens {
         Some(tokens) => tokens,
         None => Vec::new(e),
@@ -55,5 +55,5 @@ pub fn map_token_to_owner(e: &Env, id: u128, owner: &Address) {
     let key = UserDataKey::OwnedTokens(owner.clone());
     let mut tokens = read_owned_tokens(&e, owner);
     tokens.push_back(id);
-    e.storage().instance().set(&key, &tokens);
+    e.storage().persistent().set(&key, &tokens);
 }

@@ -18,7 +18,7 @@ pub fn calculate_price(env: &Env, id: u128) -> (u128, u128, u128) {
 
 pub fn read_series_sales(env: &Env, id: u128) -> u128 {
     let key = DataKey::SeriesSales(id);
-    match env.storage().instance().get::<DataKey, u128>(&key) {
+    match env.storage().persistent().get::<DataKey, u128>(&key) {
         Some(sales) => sales,
         None => 0,
     }
@@ -26,12 +26,12 @@ pub fn read_series_sales(env: &Env, id: u128) -> u128 {
 
 pub fn increment_series_sales(env: &Env, id: u128) {
     let key = DataKey::SeriesSales(id);
-    env.storage().instance().set(&key, &(read_series_sales(&env, id) + 1));
+    env.storage().persistent().set(&key, &(read_series_sales(&env, id) + 1));
 }
 
 pub fn read_series_price(env: &Env, id: u128) -> u128 {
     let key = DataKey::Price(id);
-    match env.storage().instance().get::<DataKey, u128>(&key) {
+    match env.storage().persistent().get::<DataKey, u128>(&key) {
         Some(price) => price,
         None => 0,
     }
@@ -39,7 +39,7 @@ pub fn read_series_price(env: &Env, id: u128) -> u128 {
 
 pub fn write_series_price(env: &Env, id: u128, price: u128) {
     let key = DataKey::Price(id);
-    env.storage().instance().set(&key, &price);
+    env.storage().persistent().set(&key, &price);
 }
 
 pub fn read_series_info(env: &Env, id: u128) -> Series {
