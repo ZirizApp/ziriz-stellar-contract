@@ -22,6 +22,9 @@ pub fn remove_share(e: &Env, address: &Address, amount: u128){
 }
 
 pub fn distribute_share(e: &Env, id: u128, amount: &u128){
+  /*
+    TODO: find another way to distribute reward to fans. current implementation is too expensive &  max. 60 fans
+   */
   let fans = read_fans(&e, id);
   let total_share = read_series_sales(&e, id);
   for fan in fans.iter() {
