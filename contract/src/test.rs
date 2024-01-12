@@ -78,6 +78,11 @@ fn test_buy_series_and_claim() {
     assert_eq!(nft.balance(&user2), 1);
     assert_eq!(nft.series_sales(&1), 1);
     assert_eq!(nft.owner(&1), user2);
+    let user2tokens = nft.owned_tokens(&user2);
+    assert_eq!(user2tokens.len(), 1);
+    assert_eq!(user2tokens.get(0), Some(1));
+    let metadata = nft.get_metadata(&1);
+    assert_eq!(metadata.data_file_uri, String::from_str(&env,"https://www.ziriz.com/1"));
 
     assert!(nft.series_info(&1).price > 1000);
     token_admin.mint(&user3, &4000);
@@ -85,11 +90,27 @@ fn test_buy_series_and_claim() {
     nft.buy(&user3, &1);
     assert_eq!(nft.series_sales(&1), 2);
     assert_eq!(nft.owner(&2), user3);
+    let user3tokens = nft.owned_tokens(&user3);
+    assert_eq!(user3tokens.len(), 1);
+    assert_eq!(user3tokens.get(0), Some(2));
+    let metadata2 = nft.get_metadata(&2);
+    assert_eq!(metadata2.data_file_uri, String::from_str(&env,"https://www.ziriz.com/1"));
+
+    let mut last_price = nft.series_info(&1).price;
+    for i in 0..10 {
+        let anon_user = Address::generate(&env);
+        let to_top_up = last_price + 1000;
+        token_admin.mint(&anon_user, &(to_top_up as i128));
+        nft.buy(&anon_user, &1);
+        let new_price = nft.series_info(&1).price;
+        assert!(new_price > last_price);
+        assert!(token.balance(&anon_user) < to_top_up as i128);
+        last_price = new_price;
+    }
 
     assert!(nft.share_balance(&user2)>0);
-
+    assert!(nft.share_balance(&user2)>nft.share_balance(&user3));
     nft.claim_share(&user2);
-
     assert_eq!(nft.share_balance(&user2), 0);
 
     std::println!("{}", env.logs().all().join("\n"));
