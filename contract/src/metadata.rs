@@ -34,12 +34,12 @@ pub fn write_metadata(e: &Env, id: u128, metadata: &Metadata) {
 
 pub fn map_token_to_series(e: &Env, id: u128, series_id: &u128) {
     let key = DataKey::Token(id);
-    e.storage().instance().set(&key, series_id);
+    e.storage().persistent().set(&key, series_id);
 }
 
 pub fn get_series_id(e: &Env, id: u128) -> u128 {
     let key = DataKey::Token(id);
-    e.storage().instance().get(&key).unwrap()
+    e.storage().persistent().get(&key).unwrap()
 }
 
 pub fn read_owned_tokens(e: &Env, owner: &Address) -> Vec<u128> {
