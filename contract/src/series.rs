@@ -5,17 +5,15 @@ use crate::{data_type::Series, metadata::read_metadata, owner::{read_creator, re
 
 pub fn calculate_price(env: &Env, id: u128) -> (u128, u128, u128) {
     let fan_base_price = 10_000_000; // 1 XLM
-    let decay_rate: u128 = 9_000; // 0.9
+    let decay_rate = 90; // 0.9
     let creator_coefficient = read_creator_curved(&env, id);
     let price = read_series_price(&env, id);
     let sales = read_series_sales(&env, id);
-    let artist_cut = price + (creator_coefficient * sales ) as u128;
+    let artist_cut = price + (creator_coefficient * sales * 10_000_000 ) as u128;
     let mut fan_cut = 0;
     if sales > 0 {
-        let drn = (decay_rate.div(10).pow(sales as u32)).min(1_000);
-        let drmimn1 = decay_rate.div(10).min(1_000);
-        let current_ratio = drn / drmimn1;
-        fan_cut = fan_base_price.mul(decay_rate).mul(current_ratio).div(1_000);
+        let current_ratio = sales.min(1).mul(decay_rate);
+        fan_cut = fan_base_price.mul(current_ratio).div(100);
     }
     let total_price = artist_cut + (fan_cut as u128);
     (artist_cut, fan_cut as u128, total_price)

@@ -33,9 +33,9 @@ fn test_create_series() {
     let (token, token_admin) = create_token(&env, &admin);
     let nft = create_ziriz_app(&env, &admin, &token.address);
 
-    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/1"), &1_000_000,&1);
-    nft.create_series(&user2,&String::from_str(&env,"https://www.ziriz.com/2"), &1_000_000,&1);
-    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/3"), &1_000_000,&1);
+    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/1"), &10_000_000,&1);
+    nft.create_series(&user2,&String::from_str(&env,"https://www.ziriz.com/2"), &10_000_000,&1);
+    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/3"), &10_000_000,&1);
 
     assert_eq!(nft.number_of_series(), 3);
     std::println!("{}", env.logs().all().join("\n"));
@@ -50,7 +50,7 @@ fn test_creator() {
     let (token, token_admin) = create_token(&env, &admin);
     let nft = create_ziriz_app(&env, &admin, &token.address);
 
-    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/1"), &1_000_000,&1);
+    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/1"), &10_000_000,&1);
 
     assert_eq!(nft.creator_of(&1), user1);
     std::println!("{}", env.logs().all().join("\n"));
@@ -64,19 +64,19 @@ fn test_buy_series_and_claim() {
     let user1 = Address::generate(&env);
     let user2 = Address::generate(&env);
     let user3 = Address::generate(&env);
-    let init_balance = 1_000_000;
+    let init_balance = 10_000_000;
     let (token, token_admin) = create_token(&env, &admin);
     let nft = create_ziriz_app(&env, &admin, &token.address);
 
-    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/1"), &1_000_000,&1);
+    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/1"), &10_000_000,&1);
     assert_eq!(nft.creator_of(&1), user1);
 
     let nft_1_price = nft.series_info(&1).price as i128;
     token_admin.mint(&user2, &(nft_1_price+init_balance));
     assert_eq!(token.balance(&user2), (nft_1_price+init_balance));
-    assert_eq!(nft.series_info(&1).price, 1_000_000);
+    assert_eq!(nft.series_info(&1).price, 10_000_000);
     nft.buy(&user2, &1);
-    debug_assert_eq!(token.balance(&user2) , 1_000_000);
+    debug_assert_eq!(token.balance(&user2) , 10_000_000);
     assert_eq!(nft.balance(&user2), 1);
     assert_eq!(nft.series_sales(&1), 1);
     assert_eq!(nft.owner(&1), user2);
@@ -87,7 +87,7 @@ fn test_buy_series_and_claim() {
     assert_eq!(metadata.data_file_uri, String::from_str(&env,"https://www.ziriz.com/1"));
 
     let nft_2_price = nft.series_info(&1).price as i128;
-    assert!(nft.series_info(&1).price > 1_000_000);
+    assert!(nft.series_info(&1).price > 10_000_000);
     token_admin.mint(&user3, &(nft_2_price+init_balance));
     assert_eq!(token.balance(&user3), (nft_2_price+init_balance));
     nft.buy(&user3, &1);
@@ -130,7 +130,7 @@ fn test_transfer() {
     let (token, token_admin) = create_token(&env, &admin);
     let nft = create_ziriz_app(&env, &admin, &token.address);
 
-    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/1"), &1_000_000,&1);
+    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/1"), &10_000_000,&1);
 
     assert_eq!(nft.creator_of(&1), user1);
 
