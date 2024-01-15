@@ -7,7 +7,7 @@ use core::ops::Add;
 use crate::{contract::NonFungibleToken, NonFungibleTokenClient};
 use soroban_sdk::{
     testutils::{Address as _, Logs},
-    Address, Env, IntoVal, String, token::{TokenClient, StellarAssetClient},
+    Address, Env, IntoVal, String, token::{TokenClient, StellarAssetClient}, Vec, vec,
 };
 
 fn create_ziriz_app<'a>(env: &Env, admin: &Address, native_token: &Address) -> NonFungibleTokenClient<'a> {
@@ -103,8 +103,9 @@ fn test_buy_series_and_claim() {
     assert_eq!(metadata2.data_file_uri, String::from_str(&env,"https://www.ziriz.com/1"));
 
     let mut last_price = nft.series_info(&1).price;
-
-    for i in 0..10{
+    let mut anon_users: Vec<Address> = Vec::new(&env);
+    let num_of_anon = 25;
+    for i in 0..num_of_anon{
         let anon_user = Address::generate(&env);
         let to_top_up = last_price.add(init_balance as u128);
         token_admin.mint(&anon_user, &(to_top_up as i128));
@@ -113,12 +114,28 @@ fn test_buy_series_and_claim() {
         assert!(new_price > last_price);
         assert!(token.balance(&anon_user) < to_top_up as i128);
         last_price = new_price;
+        anon_users.push_back(anon_user.clone());
     }
 
     assert!(nft.share_balance(&user2, &1) > nft.share_balance(&user3, &1));
-    assert_eq!(nft.share_balance(&user2, &1), 90_000_000 * 11);
+    assert_eq!(nft.share_balance(&user2, &1), 90_000_000 * (num_of_anon+1));
     nft.claim_share(&user2, &1);
+    nft.claim_share(&user3, &1);
     assert_eq!(nft.share_balance(&user2, &1), 0);
+    assert_eq!(nft.share_balance(&user3, &1), 0);
+
+    let mut no_balance_users = 0;
+    for( i, anon_user) in anon_users.iter().enumerate(){
+      let balance = nft.share_balance(&anon_user, &1);
+      if balance > 0{
+        nft.claim_share(&anon_user, &1);
+        assert_eq!(nft.share_balance(&anon_user, &1), 0);
+      }else {
+        no_balance_users += 1;
+      }
+    }
+
+    assert_eq!(no_balance_users, 1);
 
     std::println!("{}", env.logs().all().join("\n"));
 }

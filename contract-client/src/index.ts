@@ -30,19 +30,19 @@ if (typeof window !== 'undefined') {
 export const networks = {
     testnet: {
         networkPassphrase: "Test SDF Network ; September 2015",
-        contractId: "CAQJGLCSEUYGD4VMIR6UQ7NNKNICRHNQG4N7LSPVDJH626QNOSRVDD3O",
+        contractId: "CCQ5AV6S6JJXWY5KSXR5GLM5WPYZUKGCMUNHK2P2N46KFYBTRVIQGGVW",
     }
 } as const
 
 /**
     
     */
-export type DataKey = {tag: "Admin", values: void} | {tag: "Name", values: void} | {tag: "Symbol", values: void} | {tag: "Metadata", values: readonly [u128]} | {tag: "Owner", values: readonly [u128]} | {tag: "Token", values: readonly [u128]} | {tag: "Price", values: readonly [u128]} | {tag: "NativeToken", values: void} | {tag: "Series", values: void} | {tag: "SeriesSales", values: readonly [u128]} | {tag: "Fans", values: readonly [u128]} | {tag: "Supply", values: void};
+export type DataKey = {tag: "Admin", values: void} | {tag: "Name", values: void} | {tag: "Symbol", values: void} | {tag: "Metadata", values: readonly [u128]} | {tag: "Owner", values: readonly [u128]} | {tag: "Token", values: readonly [u128]} | {tag: "Price", values: readonly [u128]} | {tag: "NativeToken", values: void} | {tag: "Series", values: void} | {tag: "SeriesSales", values: readonly [u128]} | {tag: "FanBasePrice", values: readonly [u128]} | {tag: "FanDecayRate", values: readonly [u128]} | {tag: "Supply", values: void};
 
 /**
     
     */
-export type UserDataKey = {tag: "Creator", values: readonly [u128]} | {tag: "CreatorCurved", values: readonly [u128]} | {tag: "TokenOwner", values: readonly [u128]} | {tag: "OwnedTokens", values: readonly [string]} | {tag: "Balance", values: readonly [string]} | {tag: "SeriesBalance", values: readonly [string, u128]} | {tag: "Share", values: readonly [string]};
+export type UserDataKey = {tag: "Creator", values: readonly [u128]} | {tag: "CreatorCurved", values: readonly [u128]} | {tag: "TokenOwner", values: readonly [u128]} | {tag: "OwnedTokens", values: readonly [string]} | {tag: "OwnedSeriesOrder", values: readonly [string, u128]} | {tag: "LastWridrawn", values: readonly [string, u128]} | {tag: "Balance", values: readonly [string]} | {tag: "SeriesBalance", values: readonly [string, u128]};
 
 /**
     
@@ -69,11 +69,15 @@ export interface Series {
   /**
     
     */
+artist_cut: u128;
+  /**
+    
+    */
 creator: string;
   /**
     
     */
-curve: u128;
+fan_cut: u128;
   /**
     
     */
@@ -82,6 +86,10 @@ metadata: Metadata;
     
     */
 price: u128;
+  /**
+    
+    */
+sales: u128;
 }
 
 /**
@@ -103,22 +111,23 @@ export class Contract {
         "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",
-        "AAAAAAAAAAAAAAANY3JlYXRlX3NlcmllcwAAAAAAAAQAAAAAAAAAB2NyZWF0b3IAAAAAEwAAAAAAAAADdXJpAAAAABAAAAAAAAAACmJhc2VfcHJpY2UAAAAAAAoAAAAAAAAAC3ByaWNlX2N1cnZlAAAAAAoAAAAA",
+        "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",
-        "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",
+        "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",
-        "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",
+        "AAAAAAAAAAAAAAALY2xhaW1fc2hhcmUAAAAAAgAAAAAAAAAHYWNjb3VudAAAAAATAAAAAAAAAAlzZXJpZXNfaWQAAAAAAAAKAAAAAA==",
+        "AAAAAAAAAAAAAAAHdXBncmFkZQAAAAABAAAAAAAAAA1uZXdfd2FzbV9oYXNoAAAAAAAD7gAAACAAAAAA",
+        "AAAAAgAAAAAAAAAAAAAAB0RhdGFLZXkAAAAADQAAAAAAAAAAAAAABUFkbWluAAAAAAAAAAAAAAAAAAAETmFtZQAAAAAAAAAAAAAABlN5bWJvbAAAAAAAAQAAAAAAAAAITWV0YWRhdGEAAAABAAAACgAAAAEAAAAAAAAABU93bmVyAAAAAAAAAQAAAAoAAAABAAAAAAAAAAVUb2tlbgAAAAAAAAEAAAAKAAAAAQAAAAAAAAAFUHJpY2UAAAAAAAABAAAACgAAAAAAAAAAAAAAC05hdGl2ZVRva2VuAAAAAAAAAAAAAAAABlNlcmllcwAAAAAAAQAAAAAAAAALU2VyaWVzU2FsZXMAAAAAAQAAAAoAAAABAAAAAAAAAAxGYW5CYXNlUHJpY2UAAAABAAAACgAAAAEAAAAAAAAADEZhbkRlY2F5UmF0ZQAAAAEAAAAKAAAAAAAAAAAAAAAGU3VwcGx5AAA=",
+        "AAAAAgAAAAAAAAAAAAAAC1VzZXJEYXRhS2V5AAAAAAgAAAABAAAAAAAAAAdDcmVhdG9yAAAAAAEAAAAKAAAAAQAAAAAAAAANQ3JlYXRvckN1cnZlZAAAAAAAAAEAAAAKAAAAAQAAAAAAAAAKVG9rZW5Pd25lcgAAAAAAAQAAAAoAAAABAAAAAAAAAAtPd25lZFRva2VucwAAAAABAAAAEwAAAAEAAAAAAAAAEE93bmVkU2VyaWVzT3JkZXIAAAACAAAAEwAAAAoAAAABAAAAAAAAAAxMYXN0V3JpZHJhd24AAAACAAAAEwAAAAoAAAABAAAAAAAAAAdCYWxhbmNlAAAAAAEAAAATAAAAAQAAAAAAAAANU2VyaWVzQmFsYW5jZQAAAAAAAAIAAAATAAAACg==",
         "AAAAAQAAAAAAAAAAAAAACE1ldGFkYXRhAAAAAwAAAAAAAAANZGF0YV9maWxlX3VyaQAAAAAAABAAAAAAAAAAFGxvbmdfZGVzY3JpcHRpb25fdXJpAAAAEAAAAAAAAAAVc2hvcnRfZGVzY3JpcHRpb25fdXJpAAAAAAAAEA==",
-        "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",
+        "AAAAAQAAAAAAAAAAAAAABlNlcmllcwAAAAAABgAAAAAAAAAKYXJ0aXN0X2N1dAAAAAAACgAAAAAAAAAHY3JlYXRvcgAAAAATAAAAAAAAAAdmYW5fY3V0AAAAAAoAAAAAAAAACG1ldGFkYXRhAAAH0AAAAAhNZXRhZGF0YQAAAAAAAAAFcHJpY2UAAAAAAAAKAAAAAAAAAAVzYWxlcwAAAAAAAAo=",
         "AAAAAAAAACFSZXR1cm5zIHRoZSBvd25lciBvZiB0aGUgY29udHJhY3QAAAAAAAAJb3duZXJfZ2V0AAAAAAAAAAAAAAEAAAPoAAAAEw==",
         "AAAAAAAAAGhTZXRzIHRoZSBvd25lciBvZiB0aGUgY29udHJhY3QuIElmIG9uZSBhbHJlYWR5IHNldCBpdCB0cmFuc2ZlcnMgaXQgdG8gdGhlIG5ldyBvd25lciwgaWYgc2lnbmVkIGJ5IG93bmVyLgAAAAlvd25lcl9zZXQAAAAAAAABAAAAAAAAAAluZXdfb3duZXIAAAAAAAATAAAAAA==",
         "AAAAAAAAACRSZWRlcGxveSB0aGUgY29udHJhY3QgdG8gYSBXYXNtIGhhc2gAAAAIcmVkZXBsb3kAAAABAAAAAAAAAAl3YXNtX2hhc2gAAAAAAAPuAAAAIAAAAAA="
@@ -145,6 +154,7 @@ export class Contract {
         buy: () => {},
         owner: (result: XDR_BASE64): string => this.spec.funcResToNative("owner", result),
         claimShare: () => {},
+        upgrade: () => {},
         ownerGet: (result: XDR_BASE64): Option<string> => this.spec.funcResToNative("owner_get", result),
         ownerSet: () => {},
         redeploy: () => {}
@@ -181,6 +191,7 @@ export class Contract {
         buy: this.txFromJSON<ReturnType<typeof this.parsers['buy']>>,
         owner: this.txFromJSON<ReturnType<typeof this.parsers['owner']>>,
         claimShare: this.txFromJSON<ReturnType<typeof this.parsers['claimShare']>>,
+        upgrade: this.txFromJSON<ReturnType<typeof this.parsers['upgrade']>>,
         ownerGet: this.txFromJSON<ReturnType<typeof this.parsers['ownerGet']>>,
         ownerSet: this.txFromJSON<ReturnType<typeof this.parsers['ownerSet']>>,
         redeploy: this.txFromJSON<ReturnType<typeof this.parsers['redeploy']>>
@@ -348,7 +359,7 @@ export class Contract {
         /**
     * Construct and simulate a create_series transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
     */
-    createSeries = async ({creator, uri, base_price, price_curve}: {creator: string, uri: string, base_price: u128, price_curve: u128}, options: {
+    createSeries = async ({creator, uri, base_price, creator_curve, fan_base_price, fan_decay_rate}: {creator: string, uri: string, base_price: u128, creator_curve: u128, fan_base_price: u128, fan_decay_rate: u128}, options: {
         /**
          * The fee to pay for the transaction. Default: 100.
          */
@@ -356,7 +367,7 @@ export class Contract {
     } = {}) => {
         return await AssembledTransaction.fromSimulation({
             method: 'create_series',
-            args: this.spec.funcArgsToScVals("create_series", {creator: new Address(creator), uri, base_price, price_curve}),
+            args: this.spec.funcArgsToScVals("create_series", {creator: new Address(creator), uri, base_price, creator_curve, fan_base_price, fan_decay_rate}),
             ...options,
             ...this.options,
             errorTypes: Errors,
@@ -468,7 +479,7 @@ export class Contract {
         /**
     * Construct and simulate a share_balance transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
     */
-    shareBalance = async ({account}: {account: string}, options: {
+    shareBalance = async ({account, series_id}: {account: string, series_id: u128}, options: {
         /**
          * The fee to pay for the transaction. Default: 100.
          */
@@ -476,7 +487,7 @@ export class Contract {
     } = {}) => {
         return await AssembledTransaction.fromSimulation({
             method: 'share_balance',
-            args: this.spec.funcArgsToScVals("share_balance", {account: new Address(account)}),
+            args: this.spec.funcArgsToScVals("share_balance", {account: new Address(account), series_id}),
             ...options,
             ...this.options,
             errorTypes: Errors,
@@ -568,7 +579,7 @@ export class Contract {
         /**
     * Construct and simulate a claim_share transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
     */
-    claimShare = async ({account}: {account: string}, options: {
+    claimShare = async ({account, series_id}: {account: string, series_id: u128}, options: {
         /**
          * The fee to pay for the transaction. Default: 100.
          */
@@ -576,11 +587,31 @@ export class Contract {
     } = {}) => {
         return await AssembledTransaction.fromSimulation({
             method: 'claim_share',
-            args: this.spec.funcArgsToScVals("claim_share", {account: new Address(account)}),
+            args: this.spec.funcArgsToScVals("claim_share", {account: new Address(account), series_id}),
             ...options,
             ...this.options,
             errorTypes: Errors,
             parseResultXdr: this.parsers['claimShare'],
+        });
+    }
+
+
+        /**
+    * Construct and simulate a upgrade transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
+    */
+    upgrade = async ({new_wasm_hash}: {new_wasm_hash: Buffer}, options: {
+        /**
+         * The fee to pay for the transaction. Default: 100.
+         */
+        fee?: number,
+    } = {}) => {
+        return await AssembledTransaction.fromSimulation({
+            method: 'upgrade',
+            args: this.spec.funcArgsToScVals("upgrade", {new_wasm_hash}),
+            ...options,
+            ...this.options,
+            errorTypes: Errors,
+            parseResultXdr: this.parsers['upgrade'],
         });
     }
 

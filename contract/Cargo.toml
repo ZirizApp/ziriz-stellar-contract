@@ -7,7 +7,6 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-micromath = "2.1.0"
 soroban-sdk = "20.0.0"
 smartdeploy-sdk = "0.1.5"
 soroban-token-sdk = "20.1.0"
