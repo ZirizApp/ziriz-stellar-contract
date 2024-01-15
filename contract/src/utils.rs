@@ -1,5 +1,5 @@
 use soroban_sdk::{
-  Address, Env, String, Vec
+  Address, Env, String, Vec, BytesN
 };
 
 use crate::data_type::{Metadata, Series};
@@ -20,7 +20,7 @@ pub trait NonFungibleTokenTrait{
 
   fn number_of_series(env: Env) -> u128;
 
-  fn create_series(env: Env, creator: Address, uri: String, base_price: u128, price_curve: u128);
+  fn create_series(env: Env, creator: Address, uri: String, base_price: u128, creator_curve: u128, fan_base_price: u128, fan_decay_rate: u128);
 
   fn series_info(env: Env, series_id: u128) -> Series;
 
@@ -34,7 +34,7 @@ pub trait NonFungibleTokenTrait{
 
   fn owned_tokens(e: Env, account: Address) -> Vec<u128>;
 
-  fn share_balance(e: Env, account: Address) -> u128;
+  fn share_balance(e: Env, account: Address, series_id: u128) -> u128;
 
   fn transfer(env: Env, from: Address, to: Address, id: u128);
 
@@ -42,5 +42,7 @@ pub trait NonFungibleTokenTrait{
 
   fn buy(env: Env, buyer: Address, series_id: u128);
 
-  fn claim_share(env: Env, account: Address);
+  fn claim_share(env: Env, account: Address, series_id: u128);
+
+  fn upgrade(env: Env, new_wasm_hash: BytesN<32>);
 }

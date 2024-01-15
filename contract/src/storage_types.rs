@@ -13,7 +13,8 @@ pub enum DataKey {
     NativeToken,
     Series,
     SeriesSales(u128),
-    Fans(u128),
+    FanBasePrice(u128),
+    FanDecayRate(u128),
     Supply,
 }
 
@@ -24,7 +25,8 @@ pub enum UserDataKey {
     CreatorCurved(u128),
     TokenOwner(u128),
     OwnedTokens(Address),
+    OwnedSeriesOrder(Address, u128),
+    LastWridrawn(Address, u128),
     Balance(Address),
     SeriesBalance(Address, u128),
-    Share(Address),
 }

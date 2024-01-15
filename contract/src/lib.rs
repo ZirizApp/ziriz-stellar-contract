@@ -8,7 +8,6 @@ mod contract;
 mod storage_types;
 mod series;
 mod share;
-mod fans;
 mod utils;
 mod data_type;
 mod test;

@@ -1,36 +1,49 @@
-use core::ops::Div;
+use core::ops::{Div, Add, Mul};
 
-use soroban_sdk::{Env, Address};
-use crate::{storage_types::UserDataKey, fans::read_fans, balance::read_series_balance, series::read_series_sales};
+use soroban_sdk::{Env, Address, Vec};
+use crate::{storage_types::UserDataKey, series::{read_series_sales, get_series_fan_cut}};
 
-pub fn read_share(e: &Env, address: &Address) -> u128{
-  let key = UserDataKey::Share(address.clone());
-  match e.storage().persistent().get::<UserDataKey, u128>(&key) {
-      Some(share) => share,
-      None => 0,
+pub fn read_series_order(env: &Env, account: &Address, id: u128) -> Vec<u128> {
+    let key = UserDataKey::OwnedSeriesOrder(account.clone(), id);
+    match env.storage().persistent().get(&key) {
+        Some(tokens) => tokens,
+        None => Vec::new(&env),
+    }
+}
+
+pub fn map_series_order(env: &Env, account: &Address, id: u128, order_id: u128){
+    let key = UserDataKey::OwnedSeriesOrder(account.clone(), id);
+    let mut tokens = match env.storage().persistent().get(&key) {
+        Some(tokens) => tokens,
+        None => Vec::new(&env),
+    };
+    tokens.push_back(order_id);
+    env.storage().persistent().set(&key, &tokens);
+}
+
+pub fn read_last_whitdrawn(env: &Env, account: &Address, id: u128) -> u128 {
+    let key = UserDataKey::LastWridrawn(account.clone(), id);
+    match env.storage().persistent().get(&key) {
+        Some(last_whitdrawn) => last_whitdrawn,
+        None => 0,
+    }
+}
+
+pub fn write_last_whitdrawn(env: &Env, account: &Address, id: u128, last_whitdrawn: u128) {
+    let key = UserDataKey::LastWridrawn(account.clone(), id);
+    env.storage().persistent().set(&key, &last_whitdrawn);
+}
+
+pub fn get_share_balance(env: &Env, account: &Address, id: u128) -> u128 {
+  let mut share: u128 = 0;
+  let orders = read_series_order(&env, &account, id);
+  let current_sales = read_series_sales(&env, id);
+  let last_whitdrawn = read_last_whitdrawn(&env, &account, id);
+  for order in orders.iter() {
+    if last_whitdrawn < order+1{
+      let fan_cut = get_series_fan_cut(&env, id, order+1); // next fan cut after this order 
+      share += fan_cut.mul(current_sales - order); // your fan cut * number of sales since last whitdrawn
+    }
   }
-}
-
-pub fn add_share(e: &Env, address: &Address, amount: u128){
-  let key = UserDataKey::Share(address.clone());
-  e.storage().persistent().set(&key, &(read_share(e, address) + amount));
-}
-
-pub fn remove_share(e: &Env, address: &Address, amount: u128){
-  let key = UserDataKey::Share(address.clone());
-  e.storage().persistent().set(&key, &(read_share(e, address) - amount));
-}
-
-pub fn distribute_share(e: &Env, id: u128, amount: &u128){
-  /*
-    TODO: find another way to distribute reward to fans. current implementation is too expensive &  max. 60 fans
-   */
-  let fans = read_fans(&e, id);
-  let total_share = read_series_sales(&e, id);
-  for fan in fans.iter() {
-    let balance = read_series_balance(e, &fan, id);
-    let share_per_token = amount.div(total_share);
-    let share_to_distribute = share_per_token * balance;
-    add_share(&e, &fan, share_to_distribute   as u128);
-  }
+  share
 }
