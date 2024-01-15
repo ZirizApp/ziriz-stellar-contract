@@ -40,9 +40,9 @@ pub fn get_share_balance(env: &Env, account: &Address, id: u128) -> u128 {
   let current_sales = read_series_sales(&env, id);
   let last_whitdrawn = read_last_whitdrawn(&env, &account, id);
   for order in orders.iter() {
-    if last_whitdrawn < order+1{
+    if last_whitdrawn < current_sales{
       let fan_cut = get_series_fan_cut(&env, id, order+1); // next fan cut after this order 
-      share += fan_cut.mul(current_sales - order); // your fan cut * number of sales since last whitdrawn
+      share += fan_cut.mul(current_sales - last_whitdrawn.max(order) ); // your fan cut * number of sales since last whitdrawn
     }
   }
   share
