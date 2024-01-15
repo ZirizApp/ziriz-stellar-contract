@@ -7,7 +7,7 @@ use crate::metadata::{
     read_metadata, write_metadata, map_token_to_series, get_series_id, map_token_to_owner, read_owned_tokens
 };
 use crate::balance::{read_supply, increment_supply, read_balance, increment_series, read_series, increment_balance, write_native_token, read_native_token, increment_series_balance};
-use crate::series::{read_series_info, write_series_price, read_series_sales, increment_series_sales, calculate_price, write_fan_base_price, write_fan_decay_rate, get_series_fan_cut, read_fan_base_price};
+use crate::series::{read_series_info, write_series_price, read_series_sales, increment_series_sales, calculate_price, write_fan_base_price, write_fan_decay_rate, get_series_fan_cut, read_fan_base_price, write_sum_fan_cut, write_fan_cut, read_sum_fan_cut};
 use crate::share::{map_series_order, read_series_order, read_last_whitdrawn, get_share_balance, write_last_whitdrawn};
 use crate::utils::NonFungibleTokenTrait;
 use soroban_sdk::token::TokenClient;
@@ -134,10 +134,12 @@ impl NonFungibleTokenTrait for NonFungibleToken {
 
        let fan_base_price = read_fan_base_price(&env, series_id);
        let current_sales = read_series_sales(&env, series_id);
+       let prev_fan_cut = read_sum_fan_cut(&env, series_id);
        let (artist_cut, fan_cut, total_price) = calculate_price(&env, series_id, current_sales+1);
 
        if fan_base_price > 0 {
           assert!(fan_cut>0, "Fun cut must be greater than 0");
+          assert!(fan_cut > prev_fan_cut, "Fan cut must be greater than previous fan cut");
        }
 
        let token_address = read_native_token(&env);
@@ -159,6 +161,8 @@ impl NonFungibleTokenTrait for NonFungibleToken {
        map_token_to_owner(&env, token_id, &buyer);
        let series_order = increment_series_sales(&env, series_id);
        map_series_order(&env, &buyer, series_id, series_order);
+       write_sum_fan_cut(&env, series_id, fan_cut);
+       write_fan_cut(&env, series_id, series_order, fan_cut-prev_fan_cut);
 
        log!(
            &env,

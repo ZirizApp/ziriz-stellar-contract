@@ -1,7 +1,7 @@
 use core::ops::{Div, Add, Mul};
 
 use soroban_sdk::{Env, Address, Vec};
-use crate::{storage_types::UserDataKey, series::{read_series_sales, get_series_fan_cut}};
+use crate::{storage_types::UserDataKey, series::{read_series_sales, get_series_fan_cut, read_fan_cut}};
 
 pub fn read_series_order(env: &Env, account: &Address, id: u128) -> Vec<u128> {
     let key = UserDataKey::OwnedSeriesOrder(account.clone(), id);
@@ -41,7 +41,7 @@ pub fn get_share_balance(env: &Env, account: &Address, id: u128) -> u128 {
   let last_whitdrawn = read_last_whitdrawn(&env, &account, id);
   if last_whitdrawn < current_sales{
     for order in orders.iter() {
-        let fan_cut = get_series_fan_cut(&env, id, order+1); // next fan cut after this order 
+        let fan_cut = read_fan_cut(env, id, order+1); // next fan cut after this order 
         share += fan_cut.mul(current_sales - last_whitdrawn.max(order) ); // your fan cut * number of sales since last whitdrawn
     }
   }

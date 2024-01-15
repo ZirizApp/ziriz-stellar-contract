@@ -15,6 +15,8 @@ pub enum DataKey {
     SeriesSales(u128),
     FanBasePrice(u128),
     FanDecayRate(u128),
+    SumFanCut(u128),
+    FanCut(u128, u128),
     Supply,
 }
 
