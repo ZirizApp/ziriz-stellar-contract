@@ -1,7 +1,7 @@
 use core::ops::{Div, Add, Mul};
 
 use soroban_sdk::{Env, Address, Vec};
-use crate::{storage_types::UserDataKey, series::{read_series_sales, get_series_fan_cut, read_fan_cut}};
+use crate::{storage_types::UserDataKey, series::{read_series_sales, read_fan_cut}};
 
 pub fn read_series_order(env: &Env, account: &Address, id: u128) -> Vec<u128> {
     let key = UserDataKey::OwnedSeriesOrder(account.clone(), id);

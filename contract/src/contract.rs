@@ -7,7 +7,7 @@ use crate::metadata::{
     read_metadata, write_metadata, map_token_to_series, get_series_id, map_token_to_owner, read_owned_tokens
 };
 use crate::balance::{read_supply, increment_supply, read_balance, increment_series, read_series, increment_balance, write_native_token, read_native_token, increment_series_balance};
-use crate::series::{read_series_info, write_series_price, read_series_sales, increment_series_sales, calculate_price, write_fan_base_price, write_fan_decay_rate, get_series_fan_cut, read_fan_base_price, write_sum_fan_cut, write_fan_cut, read_sum_fan_cut};
+use crate::series::{read_series_info, write_series_price, read_series_sales, increment_series_sales, calculate_price, write_fan_base_price, write_fan_decay_rate, read_fan_base_price, write_sum_fan_cut, write_fan_cut, read_sum_fan_cut};
 use crate::share::{map_series_order, read_series_order, read_last_whitdrawn, get_share_balance, write_last_whitdrawn};
 use crate::utils::NonFungibleTokenTrait;
 use soroban_sdk::token::TokenClient;

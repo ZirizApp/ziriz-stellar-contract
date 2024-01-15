@@ -21,43 +21,6 @@ pub fn calculate_price(env: &Env, id: u128, sales: u128) -> (u128, u128, u128) {
     (artist_cut, total_fan_cut , total_price)
 }
 
-pub fn get_limited_sum(env: &Env, decay_rate: u128, fan_base_price: u128, salesmint: u128) -> u128 {
-    let base=U256::from_u32(&env, 1000);
-    let decay_rate_u256 = U256::from_u128(&env, decay_rate);
-    let one_min_r = base.sub(&decay_rate_u256);
-    let one_min_rpow_n = base.pow(salesmint as u32).sub(&decay_rate_u256.pow(salesmint as u32));
-    let alpha_one_min_rpow_n = U256::from_u128(&env, fan_base_price).mul(&one_min_rpow_n);
-    let ratio = alpha_one_min_rpow_n.div(&one_min_r);
-    let total_fan_cut_u256 = ratio.div(&base.pow(salesmint as u32)).mul(&base);
-    let total_fan_cut = total_fan_cut_u256.to_u128().unwrap();
-    total_fan_cut
-}
-
-pub fn get_unlimited_sum(env: &Env, decay_rate: u128, fan_base_price: u128) -> u128 {
-    let base: u128 = 1000;
-    let one_min_r = base - decay_rate;
-    let total_fan_cut = fan_base_price.div(one_min_r).mul(base);
-    total_fan_cut
-}
-
-pub fn get_series_fan_cut(env: &Env, id: u128, order: u128) -> u128 {
-    let prev_order = order - 1;
-    let fan_base_price = read_fan_base_price(&env, id);
-    let decay_rate = read_fan_decay_rate(&env, id);
-
-    if order <= 20 {
-      let base= U256::from_u128(&env, 1000);
-      let decay_rate_u256 = U256::from_u128(&env, decay_rate);
-      let decay_rate_pown_min_1 = decay_rate_u256.pow(prev_order as u32);
-      let fan_cut = U256::from_u128(&env, fan_base_price).mul(&decay_rate_pown_min_1).div(&base.pow(prev_order as u32));
-      fan_cut.to_u128().unwrap()
-    }else{
-      let capped_fan_cut = get_unlimited_sum(env, decay_rate, fan_base_price); 
-      let early_20= get_limited_sum(env, decay_rate, fan_base_price, 20);
-      let balance_left = capped_fan_cut - early_20;
-      balance_left.div(10_000)
-    }
-}
 
 pub fn read_series_sales(env: &Env, id: u128) -> u128 {
     let key = DataKey::SeriesSales(id);
