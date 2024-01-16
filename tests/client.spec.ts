@@ -18,10 +18,10 @@ describe('Integrity Test (Testnet)', () => {
 		const createSeries = await contract?.createSeries({
 			creator: (await cmdWallet.getAccount()).publicKey,
 			uri: 'test-uri',
-			base_price: BigInt(100),
-      creator_curve: BigInt(5),
-      fan_base_price: BigInt(100),
-      fan_decay_rate: BigInt(5),
+			base_price: BigInt(10 ** 7),
+			creator_curve: BigInt(1),
+			fan_base_price: BigInt(10 ** 7),
+			fan_decay_rate: BigInt(900),
 		})
 
 		await createSeries?.signAndSend()
@@ -30,7 +30,7 @@ describe('Integrity Test (Testnet)', () => {
 	test('buy series', async () => {
 		const buy = await contract?.buy({
 			buyer: (await cmdWallet.getAccount()).publicKey,
-			series_id: BigInt(1),
+			series_id: BigInt(3),
 		})
 
 		await buy?.signAndSend()
@@ -38,23 +38,23 @@ describe('Integrity Test (Testnet)', () => {
 
 	test('get current series price', async () => {
 		const info = await contract?.seriesInfo({
-			series_id: BigInt(1),
+			series_id: BigInt(3),
 		})
 
-		expect(info?.result?.price).toBeGreaterThanOrEqual(BigInt(100))
+		expect(info?.result?.price).toBeGreaterThanOrEqual(BigInt(10 ** 7))
 	}, 20000)
 
 	test('claim reward', async () => {
 		const buy = await contract?.buy({
 			buyer: (await cmdWallet.getAccount()).publicKey,
-			series_id: BigInt(1),
+			series_id: BigInt(3),
 		})
 
 		await buy?.signAndSend()
 
 		const shareBalance = await contract?.shareBalance({
 			account: (await cmdWallet.getAccount()).publicKey,
-      series_id: BigInt(1),
+			series_id: BigInt(3),
 		})
 
 		expect(shareBalance?.result).toBeDefined()
@@ -62,7 +62,7 @@ describe('Integrity Test (Testnet)', () => {
 
 		const claimBalance = await contract?.claimShare({
 			account: (await cmdWallet.getAccount()).publicKey,
-      series_id: BigInt(1),
+			series_id: BigInt(3),
 		})
 
 		await claimBalance?.signAndSend()
