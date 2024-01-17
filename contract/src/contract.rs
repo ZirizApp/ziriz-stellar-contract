@@ -1,5 +1,6 @@
 use crate::admin::{has_admin, read_admin, write_admin};
 use crate::data_type::{Metadata, Series};
+use crate::events::{CreateEvent, BuyEvent, ClaimEvent};
 use crate::owner::{read_creator, write_creator, write_token_owner, read_token_owner, write_creator_curved};
 use crate::metadata::{
     write_name, read_name, 
@@ -8,7 +9,7 @@ use crate::metadata::{
 };
 use crate::balance::{read_supply, increment_supply, read_balance, increment_series, read_series, increment_balance, write_native_token, read_native_token, increment_series_balance};
 use crate::series::{read_series_info, write_series_price, read_series_sales, increment_series_sales, calculate_price, write_fan_base_price, write_fan_decay_rate, read_fan_base_price, write_sum_fan_cut, write_fan_cut, read_sum_fan_cut};
-use crate::share::{map_series_order, read_series_order, read_last_whitdrawn, get_share_balance, write_last_whitdrawn};
+use crate::share::{map_series_order, read_last_whitdrawn, get_share_balance, write_last_whitdrawn};
 use crate::utils::NonFungibleTokenTrait;
 use soroban_sdk::token::TokenClient;
 use soroban_sdk::{
@@ -94,7 +95,15 @@ impl NonFungibleTokenTrait for NonFungibleToken {
             creator,
             base_price);
 
-        env.events().publish((symbol_short!("create"), creator, uri), next_id);
+        env.events().publish((symbol_short!("create"), next_id), CreateEvent{
+          creator,
+          series_id: next_id,
+          uri,
+          base_price,
+          creator_curve,
+          fan_base_price,
+          fan_decay_rate,
+        });
     }
 
     fn series_info(env: Env, series_id: u128) -> Series{
@@ -172,7 +181,14 @@ impl NonFungibleTokenTrait for NonFungibleToken {
            buyer,
            total_price);
       
-      env.events().publish((symbol_short!("buy"), series_id, fan_cut, artist_cut), token_id);
+      env.events().publish((symbol_short!("buy"), series_id), BuyEvent{
+        buyer,
+        series_id,
+        token_id,
+        price: total_price,
+        creator_cut: artist_cut,
+        fan_cut,
+      });
     }
 
     fn owner(env: Env, token_id: u128) -> Address{
@@ -197,7 +213,12 @@ impl NonFungibleTokenTrait for NonFungibleToken {
           share,
           account);
       
-      env.events().publish((symbol_short!("claim"), account, series_id), share);
+      env.events().publish((symbol_short!("claim"), account.clone(), series_id), ClaimEvent{
+        owner: account,
+        series_id,
+        amount: share,
+        last_withdrawn: current_sales,
+      });
     }
 
     fn upgrade(env: Env, new_wasm_hash: BytesN<32>) {

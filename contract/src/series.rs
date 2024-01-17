@@ -1,6 +1,6 @@
 use core::ops::{Mul, Div, Add};
 
-use soroban_sdk::{Env, U256};
+use soroban_sdk::{Env};
 use crate::{data_type::Series, metadata::read_metadata, owner::{read_creator, read_creator_curved}, storage_types::DataKey};
 
 pub fn calculate_price(env: &Env, id: u128, sales: u128) -> (u128, u128, u128) {
@@ -8,7 +8,7 @@ pub fn calculate_price(env: &Env, id: u128, sales: u128) -> (u128, u128, u128) {
     let decay_rate = read_fan_decay_rate(&env, id);
     let creator_coefficient = read_creator_curved(&env, id);
     let price = read_series_price(&env, id);
-    let artist_cut = price + (creator_coefficient * sales * 10_000_000 ) as u128;
+    let artist_cut = price + (creator_coefficient * sales ) as u128;
     let mut total_fan_cut : u128= read_sum_fan_cut(env, id); // read last fan cut
     let prev_fan_cut = read_fan_cut(env, id, sales-1);
     if total_fan_cut == 0 {

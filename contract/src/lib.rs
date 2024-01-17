@@ -9,6 +9,7 @@ mod storage_types;
 mod series;
 mod share;
 mod utils;
+mod events;
 mod data_type;
 mod test;
 
