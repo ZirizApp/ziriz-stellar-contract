@@ -19,7 +19,7 @@ describe('Integrity Test (Testnet)', () => {
 			creator: (await cmdWallet.getAccount()).publicKey,
 			uri: 'test-uri',
 			base_price: BigInt(10 ** 7),
-			creator_curve: BigInt(1**7),
+			creator_curve: BigInt(10**7),
 			fan_base_price: BigInt(10 ** 7),
 			fan_decay_rate: BigInt(900),
 		})
