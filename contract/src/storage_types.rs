@@ -28,7 +28,7 @@ pub enum UserDataKey {
     TokenOwner(u128),
     OwnedTokens(Address),
     OwnedSeriesOrder(Address, u128),
-    LastWridrawn(Address, u128),
+    LastClaim(Address, u128),
     Balance(Address),
     SeriesBalance(Address, u128),
 }

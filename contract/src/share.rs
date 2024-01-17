@@ -22,7 +22,7 @@ pub fn map_series_order(env: &Env, account: &Address, id: u128, order_id: u128){
 }
 
 pub fn read_last_whitdrawn(env: &Env, account: &Address, id: u128) -> u128 {
-    let key = UserDataKey::LastWridrawn(account.clone(), id);
+    let key = UserDataKey::LastClaim(account.clone(), id);
     match env.storage().persistent().get(&key) {
         Some(last_whitdrawn) => last_whitdrawn,
         None => 0,
@@ -30,7 +30,7 @@ pub fn read_last_whitdrawn(env: &Env, account: &Address, id: u128) -> u128 {
 }
 
 pub fn write_last_whitdrawn(env: &Env, account: &Address, id: u128, last_whitdrawn: u128) {
-    let key = UserDataKey::LastWridrawn(account.clone(), id);
+    let key = UserDataKey::LastClaim(account.clone(), id);
     env.storage().persistent().set(&key, &last_whitdrawn);
 }
 
