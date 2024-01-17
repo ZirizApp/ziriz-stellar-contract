@@ -14,8 +14,8 @@ const main = async () => {
 
 	try {
 		const tx = await client.getContract()?.initialize({
-			name: 'Ziris-Test',
-			symbol: 'Ziris',
+			name: 'Ziriz-Test',
+			symbol: 'Ziriz',
 			admin: process.env.ADMIN || '',
 			native_token: process.env.NATIVE_TOKEN || '',
 		})
