@@ -13,7 +13,7 @@
 		"contract:link": "read -p \"Enter contract id: \" contract && yarn remove contract-client && rm -rf contract-client && cd contract && soroban contract bindings typescript --network testnet --contract-id $contract --output-dir ../contract-client",
 		"contract:add": "yarn add file:./contract-client"
 	},
-	"author": "dev@paras.id",
+	"author": "dev@ziriz.app",
 	"license": "ISC",
 	"devDependencies": {
 		"@types/jest": "^29.5.11",
