@@ -2,16 +2,16 @@
 
 mod admin;
 mod balance;
-mod owner;
-mod metadata;
 mod contract;
-mod storage_types;
+mod data_type;
+mod events;
+mod metadata;
+mod owner;
 mod series;
 mod share;
-mod utils;
-mod events;
-mod data_type;
+mod storage_types;
 mod test;
+mod utils;
 
 pub use crate::contract::NonFungibleTokenClient;
 

@@ -1,6 +1,6 @@
-use crate::storage_types::{DataKey, UserDataKey};
-use soroban_sdk::{Env, String, Vec, Address};
 use crate::data_type::Metadata;
+use crate::storage_types::{DataKey, UserDataKey};
+use soroban_sdk::{Address, Env, String, Vec};
 
 pub fn read_name(e: &Env) -> String {
     let key = DataKey::Name;
@@ -53,7 +53,7 @@ pub fn read_owned_tokens(e: &Env, owner: &Address) -> Vec<u128> {
 
 pub fn map_token_to_owner(e: &Env, id: u128, owner: &Address) {
     let key = UserDataKey::OwnedTokens(owner.clone());
-    let mut tokens = read_owned_tokens(&e, owner);
+    let mut tokens = read_owned_tokens(e, owner);
     tokens.push_back(id);
     e.storage().persistent().set(&key, &tokens);
 }
