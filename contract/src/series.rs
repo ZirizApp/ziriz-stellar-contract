@@ -1,6 +1,6 @@
 use core::ops::{Mul, Div, Add};
 
-use soroban_sdk::{Env};
+use soroban_sdk::{Address, Env};
 use crate::{data_type::Series, metadata::read_metadata, owner::{read_creator, read_creator_curved}, storage_types::DataKey};
 
 pub fn calculate_price(env: &Env, id: u128, sales: u128) -> (u128, u128, u128) {

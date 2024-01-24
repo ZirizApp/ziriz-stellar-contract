@@ -18,6 +18,7 @@ pub enum DataKey {
     SumFanCut(u128),
     FanCut(u128, u128),
     Supply,
+    Wasm,
 }
 
 #[derive(Clone)]
