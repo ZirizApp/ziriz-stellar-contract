@@ -30,7 +30,7 @@ if (typeof window !== 'undefined') {
 export const networks = {
     testnet: {
         networkPassphrase: "Test SDF Network ; September 2015",
-        contractId: "CCAAZ2GMI6R35CQMIKHGDJQGLKFHB4QAUFRNCI7Q6QNWR7VCHA4GCPLY",
+        contractId: "CBP55WUCDFIDNXRXMYYA6ENSBJP2CUBDQ5HRKY4ADBUWK63ASMT5GVNA",
     }
 } as const
 
@@ -145,14 +145,6 @@ issuer: string;
   /**
     
     */
-long_description_uri: string;
-  /**
-    
-    */
-short_description_uri: string;
-  /**
-    
-    */
 symbol: string;
 }
 
@@ -200,7 +192,7 @@ export class Contract {
             "AAAAAAAAAAAAAAAKaW5pdGlhbGl6ZQAAAAAAAgAAAAAAAAAFYWRtaW4AAAAAAAATAAAAAAAAAAxuYXRpdmVfdG9rZW4AAAATAAAAAA==",
         "AAAAAAAAAAAAAAAFYWRtaW4AAAAAAAAAAAAAAQAAABM=",
         "AAAAAAAAAAAAAAAQbnVtYmVyX29mX3NlcmllcwAAAAAAAAABAAAACg==",
-        "AAAAAAAAAAAAAAANY3JlYXRlX3NlcmllcwAAAAAAAAgAAAAAAAAAB2NyZWF0b3IAAAAAEwAAAAAAAAADdXJpAAAAABAAAAAAAAAACmJhc2VfcHJpY2UAAAAAAAoAAAAAAAAABG5hbWUAAAAQAAAAAAAAAAtkZXNjcmlwdGlvbgAAAAAQAAAAAAAAAA1jcmVhdG9yX2N1cnZlAAAAAAAACgAAAAAAAAAOZmFuX2Jhc2VfcHJpY2UAAAAAAAoAAAAAAAAADmZhbl9kZWNheV9yYXRlAAAAAAAKAAAAAA==",
+        "AAAAAAAAAAAAAAANY3JlYXRlX3NlcmllcwAAAAAAAAYAAAAAAAAAB2NyZWF0b3IAAAAAEwAAAAAAAAADdXJpAAAAABAAAAAAAAAACmJhc2VfcHJpY2UAAAAAAAoAAAAAAAAADWNyZWF0b3JfY3VydmUAAAAAAAAKAAAAAAAAAA5mYW5fYmFzZV9wcmljZQAAAAAACgAAAAAAAAAOZmFuX2RlY2F5X3JhdGUAAAAAAAoAAAAA",
         "AAAAAAAAAAAAAAALc2VyaWVzX2luZm8AAAAAAQAAAAAAAAAJc2VyaWVzX2lkAAAAAAAACgAAAAEAAAfQAAAABlNlcmllcwAA",
         "AAAAAAAAAAAAAAAMc2VyaWVzX3NhbGVzAAAAAQAAAAAAAAAJc2VyaWVzX2lkAAAAAAAACgAAAAEAAAAK",
         "AAAAAAAAAAAAAAAKY3JlYXRvcl9vZgAAAAAAAQAAAAAAAAAJc2VyaWVzX2lkAAAAAAAACgAAAAEAAAAT",
@@ -213,7 +205,7 @@ export class Contract {
         "AAAAAQAAAAAAAAAAAAAAC0NyZWF0ZUV2ZW50AAAAAAcAAAAAAAAACmJhc2VfcHJpY2UAAAAAAAoAAAAAAAAAB2NyZWF0b3IAAAAAEwAAAAAAAAANY3JlYXRvcl9jdXJ2ZQAAAAAAAAoAAAAAAAAADmZhbl9iYXNlX3ByaWNlAAAAAAAKAAAAAAAAAA5mYW5fZGVjYXlfcmF0ZQAAAAAACgAAAAAAAAAJc2VyaWVzX2lkAAAAAAAACgAAAAAAAAADdXJpAAAAABA=",
         "AAAAAQAAAAAAAAAAAAAACEJ1eUV2ZW50AAAABgAAAAAAAAAFYnV5ZXIAAAAAAAATAAAAAAAAAAtjcmVhdG9yX2N1dAAAAAAKAAAAAAAAAAdmYW5fY3V0AAAAAAoAAAAAAAAABXByaWNlAAAAAAAACgAAAAAAAAAJc2VyaWVzX2lkAAAAAAAACgAAAAAAAAAIdG9rZW5faWQAAAAK",
         "AAAAAQAAAAAAAAAAAAAACkNsYWltRXZlbnQAAAAAAAQAAAAAAAAABmFtb3VudAAAAAAACgAAAAAAAAAObGFzdF93aXRoZHJhd24AAAAAAAoAAAAAAAAABW93bmVyAAAAAAAAEwAAAAAAAAAJc2VyaWVzX2lkAAAAAAAACg==",
-        "AAAAAQAAAAAAAAAAAAAACE1ldGFkYXRhAAAABQAAAAAAAAANZGF0YV9maWxlX3VyaQAAAAAAABAAAAAAAAAABmlzc3VlcgAAAAAAEwAAAAAAAAAUbG9uZ19kZXNjcmlwdGlvbl91cmkAAAAQAAAAAAAAABVzaG9ydF9kZXNjcmlwdGlvbl91cmkAAAAAAAAQAAAAAAAAAAZzeW1ib2wAAAAAABA=",
+        "AAAAAQAAAAAAAAAAAAAACE1ldGFkYXRhAAAAAwAAAAAAAAANZGF0YV9maWxlX3VyaQAAAAAAABAAAAAAAAAABmlzc3VlcgAAAAAAEwAAAAAAAAAGc3ltYm9sAAAAAAAQ",
         "AAAAAQAAAAAAAAAAAAAABlNlcmllcwAAAAAABgAAAAAAAAAKYXJ0aXN0X2N1dAAAAAAACgAAAAAAAAAHY3JlYXRvcgAAAAATAAAAAAAAAAdmYW5fY3V0AAAAAAoAAAAAAAAACG1ldGFkYXRhAAAH0AAAAAhNZXRhZGF0YQAAAAAAAAAFcHJpY2UAAAAAAAAKAAAAAAAAAAVzYWxlcwAAAAAAAAo=",
         "AAAAAAAAACFSZXR1cm5zIHRoZSBvd25lciBvZiB0aGUgY29udHJhY3QAAAAAAAAJb3duZXJfZ2V0AAAAAAAAAAAAAAEAAAPoAAAAEw==",
         "AAAAAAAAAGhTZXRzIHRoZSBvd25lciBvZiB0aGUgY29udHJhY3QuIElmIG9uZSBhbHJlYWR5IHNldCBpdCB0cmFuc2ZlcnMgaXQgdG8gdGhlIG5ldyBvd25lciwgaWYgc2lnbmVkIGJ5IG93bmVyLgAAAAlvd25lcl9zZXQAAAAAAAABAAAAAAAAAAluZXdfb3duZXIAAAAAAAATAAAAAA==",
@@ -326,7 +318,7 @@ export class Contract {
         /**
     * Construct and simulate a create_series transaction. Returns an `AssembledTransaction` object which will have a `result` field containing the result of the simulation. If this transaction changes contract state, you will need to call `signAndSend()` on the returned object.
     */
-    createSeries = async ({creator, uri, base_price, name, description, creator_curve, fan_base_price, fan_decay_rate}: {creator: string, uri: string, base_price: u128, name: string, description: string, creator_curve: u128, fan_base_price: u128, fan_decay_rate: u128}, options: {
+    createSeries = async ({creator, uri, base_price, creator_curve, fan_base_price, fan_decay_rate}: {creator: string, uri: string, base_price: u128, creator_curve: u128, fan_base_price: u128, fan_decay_rate: u128}, options: {
         /**
          * The fee to pay for the transaction. Default: 100.
          */
@@ -334,7 +326,7 @@ export class Contract {
     } = {}) => {
         return await AssembledTransaction.fromSimulation({
             method: 'create_series',
-            args: this.spec.funcArgsToScVals("create_series", {creator: new Address(creator), uri, base_price, name, description, creator_curve, fan_base_price, fan_decay_rate}),
+            args: this.spec.funcArgsToScVals("create_series", {creator: new Address(creator), uri, base_price, creator_curve, fan_base_price, fan_decay_rate}),
             ...options,
             ...this.options,
             errorTypes: Errors,

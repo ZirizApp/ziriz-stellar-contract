@@ -37,7 +37,7 @@ pub trait ZirizCreatorTrait{
 
   fn number_of_series(env: Env) -> u128;
 
-  fn create_series(env: Env, creator: Address, uri: String, base_price: u128, name: String, description: String, creator_curve: u128, fan_base_price: u128, fan_decay_rate: u128);
+  fn create_series(env: Env, creator: Address, uri: String, base_price: u128, creator_curve: u128, fan_base_price: u128, fan_decay_rate: u128);
 
   fn series_info(env: Env, series_id: u128) -> Series;
 

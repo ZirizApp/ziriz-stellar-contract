@@ -44,16 +44,12 @@ impl ZirizCreatorTrait for ZirizCreator {
         read_series(&env)
     }
     
-    fn create_series(env: Env, creator: Address, uri: String, base_price: u128, name: String, description: String, creator_curve: u128, fan_base_price: u128, fan_decay_rate: u128) {
+    fn create_series(env: Env, creator: Address, uri: String, base_price: u128, creator_curve: u128, fan_base_price: u128, fan_decay_rate: u128) {
         creator.require_auth();
 
         assert!(base_price > 0, "Base price must be greater than 0");
         assert!(uri.len() > 0, "URI must be provided");
         assert!(fan_decay_rate <= 1000, "Fan decay rate must be less than 1000");
-        assert!(name.len() > 0, "Name must be provided");
-        assert!(description.len() > 0, "Description must be provided");
-        assert!(name.len() <= 200, "Name must be less than 200 characters");
-        assert!(description.len() <= 500, "Description must be less than 500 characters");
 
         let next_id = increment_series(&env);
         write_creator(&env, next_id.clone(), &creator);
@@ -70,8 +66,6 @@ impl ZirizCreatorTrait for ZirizCreator {
         nft_client.init(&env.current_contract_address(), &String::from_str(&env, format!("ZS-{}",next_id).as_str()), &String::from_str(&env, format!("ZS{}",next_id).as_str()));
 
         let metadata = Metadata{
-          short_description_uri: name.clone(),
-          long_description_uri: description.clone(),
           data_file_uri: uri.clone(),
           symbol: String::from_str(&env, format!("Z{}",next_id).as_str()),
           issuer: deployed_address,

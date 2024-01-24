@@ -34,9 +34,9 @@ fn test_create_series() {
     let (token, token_admin) = create_token(&env, &admin);
     let nft = create_ziriz_app(&env, &admin, &token.address);
 
-    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/1"), &10_000_000, &String::from_str(&env,"Z"), &String::from_str(&env,"Z-DESC"),&10_000_000,&100_000_000, &900);
-    nft.create_series(&user2,&String::from_str(&env,"https://www.ziriz.com/2"), &10_000_000, &String::from_str(&env,"Z"), &String::from_str(&env,"Z-DESC"),&10_000_000,&100_000_000, &900);
-    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/3"), &10_000_000, &String::from_str(&env,"Z"), &String::from_str(&env,"Z-DESC"),&10_000_000, &100_000_000, &900);
+    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/1"), &10_000_000, &10_000_000,&100_000_000, &900);
+    nft.create_series(&user2,&String::from_str(&env,"https://www.ziriz.com/2"), &10_000_000, &10_000_000,&100_000_000, &900);
+    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/3"), &10_000_000, &10_000_000, &100_000_000, &900);
 
     assert_eq!(nft.number_of_series(), 3);
     std::println!("{}", env.logs().all().join("\n"));
@@ -51,7 +51,7 @@ fn test_creator() {
     let (token, token_admin) = create_token(&env, &admin);
     let nft = create_ziriz_app(&env, &admin, &token.address);
 
-    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/1"), &10_000_000, &String::from_str(&env,"Z"), &String::from_str(&env,"Z-DESC"),&10_000_000, &100_000_000, &900);
+    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/1"), &10_000_000, &10_000_000, &100_000_000, &900);
 
     assert_eq!(nft.creator_of(&1), user1);
     std::println!("{}", env.logs().all().join("\n"));
@@ -69,7 +69,7 @@ fn test_buy_series_and_claim() {
     let (token, token_admin) = create_token(&env, &admin);
     let nft = create_ziriz_app(&env, &admin, &token.address);
 
-    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/1"), &10_000_000, &String::from_str(&env,"Z"), &String::from_str(&env,"Z-DESC"),&10_000_000, &100_000_000, &900);
+    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/1"), &10_000_000, &10_000_000, &100_000_000, &900);
     assert_eq!(nft.creator_of(&1), user1);
 
     let first_series_info = nft.series_info(&1);
