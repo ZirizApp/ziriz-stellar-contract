@@ -17,7 +17,7 @@ describe('Integrity Test (Testnet)', () => {
 	test('test create series', async () => {
 		const createSeries = await contract?.createSeries({
 			creator: (await cmdWallet.getAccount()).publicKey,
-			uri: 'test-uri',
+			uri: 'https://link.storjshare.io/s/jwzwr227mcqhf6uemcqwl5xsp5bq/ziriz/1706056092982&blur.json?wrap=0',
 			base_price: BigInt(10 ** 7),
 			creator_curve: BigInt(10 ** 7),
 			fan_base_price: BigInt(10 ** 7),

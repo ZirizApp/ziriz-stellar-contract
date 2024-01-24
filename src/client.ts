@@ -2,7 +2,7 @@ import { ClassOptions, Contract, Wallet, networks } from 'contract-client'
 
 export type ZirizClientProps = {
 	network: 'testnet' | 'mainnet'
-	wallet: Wallet
+	wallet?: Wallet
 }
 
 interface NetworkConfig {
