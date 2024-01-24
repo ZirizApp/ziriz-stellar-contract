@@ -67,7 +67,7 @@ impl ZirizCreatorTrait for ZirizCreator {
 
         let metadata = Metadata{
           data_file_uri: uri.clone(),
-          symbol: String::from_str(&env, format!("Z{}",next_id).as_str()),
+          symbol: String::from_str(&env, format!("ZS{}",next_id).as_str()),
           issuer: deployed_address,
         };
         write_metadata(&env, next_id.clone(), &metadata);
