@@ -1,6 +1,6 @@
 use crate::admin_storage::{has_admin, read_admin, write_admin};
 use crate::metadata_storage::{read_name, read_symbol, write_name, write_symbol};
-use crate::token_data::{increment_balance, increment_supply, read_balance, read_supply};
+use crate::token_storage::{increment_balance, increment_supply, read_balance, read_supply};
 use crate::utils::NonFungibleTokenTrait;
 use soroban_sdk::{contract, contractimpl, Address, Env, String};
 

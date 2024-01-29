@@ -11,7 +11,7 @@ use crate::series_storage::{
 use crate::share_storage::{
     get_share_balance, map_series_order, read_last_whitdrawn, write_last_whitdrawn,
 };
-use crate::token_data::{
+use crate::token_storage::{
     increment_series, increment_series_balance, read_native_token, read_series, write_native_token,
 };
 use crate::utils::{Client, ZirizCreatorTrait};

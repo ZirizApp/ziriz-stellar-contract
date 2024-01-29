@@ -14,18 +14,6 @@ pub fn write_creator(e: &Env, id: u128, owner: &Address) {
     e.storage().persistent().set(&key, owner);
 }
 
-pub fn read_token_owner(e: &Env, id: u128) -> Address {
-    let key = UserDataKey::TokenOwner(id);
-    match e.storage().persistent().get(&key) {
-        Some(owner) => owner,
-        None => panic!("invalid token id"),
-    }
-}
-
-pub fn write_token_owner(e: &Env, id: u128, owner: &Address) {
-    let key = UserDataKey::TokenOwner(id);
-    e.storage().persistent().set(&key, owner);
-}
 
 pub fn read_creator_curved(e: &Env, id: u128) -> u128 {
     let key = UserDataKey::CreatorCurved(id);

@@ -14,7 +14,9 @@
 		"contract:add": "yarn add file:./contract-client",
 		"contract:clippy": "cd contract && cargo clippy -- -D clippy::pedantic",
 		"contract:clippy-fix": "cd contract && cargo clippy --  -D clippy::pedantic",
-		"contract:format": "cd contract && cargo fmt"
+		"contract:format": "cd contract && cargo fmt",
+		"nft-contract:test": "cd series-contract && cargo test",
+		"nft-contract:build": "cd series-contract && cargo build --target wasm32-unknown-unknown --release"
 	},
 	"author": "dev@ziriz.app",
 	"license": "ISC",
