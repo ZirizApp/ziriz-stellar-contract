@@ -1,20 +1,18 @@
 #![no_std]
 
-mod admin;
-mod balance;
-mod owner;
-mod metadata;
+mod admin_storage;
 mod contract; // creagor module
-mod storage_types;
-mod series;
-mod share;
-mod utils;
-mod events;
 mod data_type;
-// mod nft; // for nft module
+mod events;
+mod metadata_storage;
+mod owner_storage;
+mod series_storage;
+mod share_storage;
+mod storage_types;
 mod test;
+mod token_storage;
+mod utils;
 
-// pub use crate::nft::NonFungibleToken;
 pub use crate::contract::ZirizCreator;
 
 smartdeploy_sdk::core_riff!();

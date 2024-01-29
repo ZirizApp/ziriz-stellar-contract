@@ -1,8 +1,10 @@
 contract/target
+series-contract/target
 .soroban
 node_modules
 .history
 .DS_Store
 contract/test_snapshots
+series-contract/test_snapshots
 dist
 .env
