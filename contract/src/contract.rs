@@ -24,6 +24,10 @@ mod nft_contract {
     soroban_sdk::contractimport!(file = "src/wasm/ziriz-series.wasm");
 }
 
+mod nft_contract{
+  soroban_sdk::contractimport!(file= "src/wasm/ziriz-series.wasm");
+}
+
 #[contract]
 pub struct ZirizCreator;
 
