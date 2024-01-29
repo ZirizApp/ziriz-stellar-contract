@@ -1,6 +1,6 @@
-use crate::storage_types::{DataKey};
-use soroban_sdk::{Env, String};
 use crate::data_type::Metadata;
+use crate::storage_types::DataKey;
+use soroban_sdk::{Env, String};
 
 pub fn read_name(e: &Env) -> String {
     let key = DataKey::Name;
