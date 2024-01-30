@@ -31,6 +31,24 @@ class ZirizCMDWallet implements Wallet {
 		return account.balances
 	}
 
+	async setHomeDomain(domain: string) {
+		const account = await this.server.loadAccount(this.pubKey)
+		var transaction = new StellarSdk.TransactionBuilder(account, {
+			fee: '100',
+			networkPassphrase: StellarSdk.Networks.TESTNET,
+		})
+			.addOperation(
+				StellarSdk.Operation.setOptions({
+					homeDomain: domain,
+				})
+			)
+			// setTimeout is required for a transaction
+			.setTimeout(100)
+			.build()
+		transaction.sign(this.keypair)
+		await this.server.submitTransaction(transaction)
+	}
+
 	async getConnectionStatus() {
 		return true
 	}
