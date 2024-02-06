@@ -1,6 +1,7 @@
 use core::ops::{Add, Div, Mul};
 
 use crate::{
+    bump::extend_persistent,
     data_type::Series,
     metadata_storage::read_metadata,
     owner_storage::{read_creator, read_creator_curved},
@@ -41,6 +42,11 @@ pub fn increment_series_sales(env: &Env, id: u128) -> u128 {
     next_id
 }
 
+pub fn expand_series_sales_ttl(env: &Env, id: u128) {
+    let key = DataKey::SeriesSales(id);
+    extend_persistent(env, &key);
+}
+
 pub fn read_series_price(env: &Env, id: u128) -> u128 {
     let key = DataKey::Price(id);
     env.storage()
@@ -54,12 +60,18 @@ pub fn write_series_price(env: &Env, id: u128, price: u128) {
     env.storage().persistent().set(&key, &price);
 }
 
+pub fn expand_series_price_ttl(env: &Env, id: u128) {
+    let key = DataKey::Price(id);
+    extend_persistent(env, &key);
+}
+
 pub fn read_series_info(env: &Env, id: u128) -> Series {
     let series_creator = read_creator(env, id);
     let metadata = read_metadata(env, id);
     let current_sales = read_series_sales(env, id);
     let (artist_cut, fan_cut, total_price) = calculate_price(env, id, current_sales + 1);
     let sales = read_series_sales(env, id);
+
     Series {
         creator: series_creator,
         price: total_price,
@@ -83,6 +95,11 @@ pub fn write_fan_base_price(env: &Env, id: u128, price: u128) {
     env.storage().persistent().set(&key, &price);
 }
 
+pub fn expand_fan_base_price_ttl(env: &Env, id: u128) {
+    let key = DataKey::FanBasePrice(id);
+    extend_persistent(env, &key);
+}
+
 pub fn read_fan_decay_rate(env: &Env, id: u128) -> u128 {
     let key = DataKey::FanDecayRate(id);
     env.storage()
@@ -94,6 +111,11 @@ pub fn read_fan_decay_rate(env: &Env, id: u128) -> u128 {
 pub fn write_fan_decay_rate(env: &Env, id: u128, rate: u128) {
     let key = DataKey::FanDecayRate(id);
     env.storage().persistent().set(&key, &rate);
+}
+
+pub fn expand_fan_decay_rate_ttl(env: &Env, id: u128) {
+    let key = DataKey::FanDecayRate(id);
+    extend_persistent(env, &key);
 }
 
 pub fn read_sum_fan_cut(env: &Env, id: u128) -> u128 {
@@ -109,6 +131,11 @@ pub fn write_sum_fan_cut(env: &Env, id: u128, price: u128) {
     env.storage().persistent().set(&key, &price);
 }
 
+pub fn expand_sum_fan_cut_ttl(env: &Env, id: u128) {
+    let key = DataKey::SumFanCut(id);
+    extend_persistent(env, &key);
+}
+
 pub fn read_fan_cut(env: &Env, id: u128, order: u128) -> u128 {
     let key = DataKey::FanCut(id, order);
     env.storage()
@@ -120,4 +147,9 @@ pub fn read_fan_cut(env: &Env, id: u128, order: u128) -> u128 {
 pub fn write_fan_cut(env: &Env, id: u128, order: u128, price: u128) {
     let key = DataKey::FanCut(id, order);
     env.storage().persistent().set(&key, &price);
+}
+
+pub fn expand_fan_cut_ttl(env: &Env, id: u128, order: u128) {
+    let key = DataKey::FanCut(id, order);
+    extend_persistent(env, &key);
 }

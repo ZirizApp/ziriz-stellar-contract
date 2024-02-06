@@ -1,6 +1,7 @@
 #![no_std]
 
 mod admin_storage;
+mod bump;
 mod contract; // creagor module
 mod data_type;
 mod events;

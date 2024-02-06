@@ -17,6 +17,8 @@ pub enum DataKey {
     FanDecayRate(u128),
     SumFanCut(u128),
     FanCut(u128, u128),
+    Creator(u128),
+    CreatorCurved(u128),
     Supply,
     Wasm,
 }
@@ -24,8 +26,6 @@ pub enum DataKey {
 #[derive(Clone)]
 #[contracttype]
 pub enum UserDataKey {
-    Creator(u128),
-    CreatorCurved(u128),
     TokenOwner(u128),
     OwnedTokens(Address),
     OwnedSeriesOrder(Address, u128),

@@ -2,6 +2,7 @@
 
 mod admin_storage;
 mod metadata_storage;
+mod bump;
 mod nft_contract; // for nft module
 mod storage_types;
 mod test;
