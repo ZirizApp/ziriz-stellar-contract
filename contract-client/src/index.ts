@@ -30,19 +30,57 @@ if (typeof window !== 'undefined') {
 export const networks = {
     testnet: {
         networkPassphrase: "Test SDF Network ; September 2015",
-        contractId: "CBP55WUCDFIDNXRXMYYA6ENSBJP2CUBDQ5HRKY4ADBUWK63ASMT5GVNA",
+        contractId: "CCN2F6JRJ3XX6YJVK6AJUHV4XR4TZXH6ON4DE7LKUXAFGSC6DR4KCVL2",
     }
 } as const
 
 /**
     
     */
-export type DataKey = {tag: "Admin", values: void} | {tag: "Name", values: void} | {tag: "Symbol", values: void} | {tag: "Metadata", values: readonly [u128]} | {tag: "Owner", values: readonly [u128]} | {tag: "Token", values: readonly [u128]} | {tag: "Price", values: readonly [u128]} | {tag: "NativeToken", values: void} | {tag: "Series", values: void} | {tag: "SeriesSales", values: readonly [u128]} | {tag: "FanBasePrice", values: readonly [u128]} | {tag: "FanDecayRate", values: readonly [u128]} | {tag: "SumFanCut", values: readonly [u128]} | {tag: "FanCut", values: readonly [u128, u128]} | {tag: "Supply", values: void} | {tag: "Wasm", values: void};
+export interface Metadata {
+  /**
+    
+    */
+data_file_uri: string;
+  /**
+    
+    */
+issuer: string;
+  /**
+    
+    */
+symbol: string;
+}
 
 /**
     
     */
-export type UserDataKey = {tag: "Creator", values: readonly [u128]} | {tag: "CreatorCurved", values: readonly [u128]} | {tag: "TokenOwner", values: readonly [u128]} | {tag: "OwnedTokens", values: readonly [string]} | {tag: "OwnedSeriesOrder", values: readonly [string, u128]} | {tag: "LastClaim", values: readonly [string, u128]} | {tag: "Balance", values: readonly [string]} | {tag: "SeriesBalance", values: readonly [string, u128]};
+export interface Series {
+  /**
+    
+    */
+artist_cut: u128;
+  /**
+    
+    */
+creator: string;
+  /**
+    
+    */
+fan_cut: u128;
+  /**
+    
+    */
+metadata: Metadata;
+  /**
+    
+    */
+price: u128;
+  /**
+    
+    */
+sales: u128;
+}
 
 /**
     
@@ -133,50 +171,12 @@ series_id: u128;
 /**
     
     */
-export interface Metadata {
-  /**
-    
-    */
-data_file_uri: string;
-  /**
-    
-    */
-issuer: string;
-  /**
-    
-    */
-symbol: string;
-}
+export type DataKey = {tag: "Admin", values: void} | {tag: "Name", values: void} | {tag: "Symbol", values: void} | {tag: "Metadata", values: readonly [u128]} | {tag: "Owner", values: readonly [u128]} | {tag: "Token", values: readonly [u128]} | {tag: "Price", values: readonly [u128]} | {tag: "NativeToken", values: void} | {tag: "Series", values: void} | {tag: "SeriesSales", values: readonly [u128]} | {tag: "FanBasePrice", values: readonly [u128]} | {tag: "FanDecayRate", values: readonly [u128]} | {tag: "SumFanCut", values: readonly [u128]} | {tag: "FanCut", values: readonly [u128, u128]} | {tag: "Creator", values: readonly [u128]} | {tag: "CreatorCurved", values: readonly [u128]} | {tag: "Supply", values: void} | {tag: "Wasm", values: void};
 
 /**
     
     */
-export interface Series {
-  /**
-    
-    */
-artist_cut: u128;
-  /**
-    
-    */
-creator: string;
-  /**
-    
-    */
-fan_cut: u128;
-  /**
-    
-    */
-metadata: Metadata;
-  /**
-    
-    */
-price: u128;
-  /**
-    
-    */
-sales: u128;
-}
+export type UserDataKey = {tag: "TokenOwner", values: readonly [u128]} | {tag: "OwnedTokens", values: readonly [string]} | {tag: "OwnedSeriesOrder", values: readonly [string, u128]} | {tag: "LastClaim", values: readonly [string, u128]} | {tag: "Balance", values: readonly [string]} | {tag: "SeriesBalance", values: readonly [string, u128]};
 
 /**
     
@@ -200,13 +200,13 @@ export class Contract {
         "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",
-        "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",
+        "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",
-        "AAAAAQAAAAAAAAAAAAAACE1ldGFkYXRhAAAAAwAAAAAAAAANZGF0YV9maWxlX3VyaQAAAAAAABAAAAAAAAAABmlzc3VlcgAAAAAAEwAAAAAAAAAGc3ltYm9sAAAAAAAQ",
-        "AAAAAQAAAAAAAAAAAAAABlNlcmllcwAAAAAABgAAAAAAAAAKYXJ0aXN0X2N1dAAAAAAACgAAAAAAAAAHY3JlYXRvcgAAAAATAAAAAAAAAAdmYW5fY3V0AAAAAAoAAAAAAAAACG1ldGFkYXRhAAAH0AAAAAhNZXRhZGF0YQAAAAAAAAAFcHJpY2UAAAAAAAAKAAAAAAAAAAVzYWxlcwAAAAAAAAo=",
+        "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"

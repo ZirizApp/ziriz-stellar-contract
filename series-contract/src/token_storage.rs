@@ -1,4 +1,4 @@
-use crate::storage_types::{DataKey, UserDataKey};
+use crate::{bump::extend_user_persistent, storage_types::{DataKey, UserDataKey}};
 use soroban_sdk::{Address, Env};
 
 pub fn read_supply(e: &Env) -> u128 {
@@ -31,3 +31,7 @@ pub fn increment_balance(e: &Env, id: &Address) {
         .set(&key, &(read_balance(e, id) + 1));
 }
 
+pub fn expand_balance_ttl(e: &Env, id: &Address) {
+    let key = UserDataKey::Balance(id.clone());
+    extend_user_persistent(e, &key);
+}

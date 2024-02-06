@@ -38,7 +38,6 @@ fn test_create_series() {
     let (token, _token_admin) = create_token(&env, &admin);
     let nft = create_ziriz_app(&env, &admin, &token.address);
 
-<<<<<<< HEAD
     nft.create_series(
         &user1,
         &String::from_str(&env, "https://www.ziriz.com/1"),
@@ -63,11 +62,6 @@ fn test_create_series() {
         &100_000_000,
         &900,
     );
-=======
-    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/1"), &10_000_000, &10_000_000,&100_000_000, &900);
-    nft.create_series(&user2,&String::from_str(&env,"https://www.ziriz.com/2"), &10_000_000, &10_000_000,&100_000_000, &900);
-    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/3"), &10_000_000, &10_000_000, &100_000_000, &900);
->>>>>>> main
 
     assert_eq!(nft.number_of_series(), 3);
     std::println!("{}", env.logs().all().join("\n"));
@@ -82,7 +76,6 @@ fn test_creator() {
     let (token, _token_admin) = create_token(&env, &admin);
     let nft = create_ziriz_app(&env, &admin, &token.address);
 
-<<<<<<< HEAD
     nft.create_series(
         &user1,
         &String::from_str(&env, "https://www.ziriz.com/1"),
@@ -91,9 +84,6 @@ fn test_creator() {
         &100_000_000,
         &900,
     );
-=======
-    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/1"), &10_000_000, &10_000_000, &100_000_000, &900);
->>>>>>> main
 
     assert_eq!(nft.creator_of(&1), user1);
     std::println!("{}", env.logs().all().join("\n"));
@@ -111,7 +101,6 @@ fn test_buy_series_and_claim() {
     let (token, token_admin) = create_token(&env, &admin);
     let nft = create_ziriz_app(&env, &admin, &token.address);
 
-<<<<<<< HEAD
     nft.create_series(
         &user1,
         &String::from_str(&env, "https://www.ziriz.com/1"),
@@ -120,9 +109,6 @@ fn test_buy_series_and_claim() {
         &100_000_000,
         &900,
     );
-=======
-    nft.create_series(&user1, &String::from_str(&env,"https://www.ziriz.com/1"), &10_000_000, &10_000_000, &100_000_000, &900);
->>>>>>> main
     assert_eq!(nft.creator_of(&1), user1);
 
     let first_series_info = nft.series_info(&1);
@@ -133,11 +119,7 @@ fn test_buy_series_and_claim() {
 
     let second_series_info = nft.series_info(&1);
     let series_client = TokenClient::new(&env, &second_series_info.metadata.issuer);
-<<<<<<< HEAD
     assert!(series_client.balance(&user2) == 1);
-=======
-    assert!(series_client.balance(&user2)==1);
->>>>>>> main
 
     let nft_2_price = second_series_info.price as i128;
     assert!(second_series_info.fan_cut > first_series_info.fan_cut);
@@ -150,11 +132,7 @@ fn test_buy_series_and_claim() {
     let mut last_price = nft.series_info(&1).price;
     let mut anon_users: Vec<Address> = Vec::new(&env);
     let num_of_anon = 10;
-<<<<<<< HEAD
     for _i in 0..num_of_anon {
-=======
-    for i in 0..num_of_anon{
->>>>>>> main
         let anon_user = Address::generate(&env);
         let to_top_up = last_price.add(init_balance as u128);
         token_admin.mint(&anon_user, &(to_top_up as i128));

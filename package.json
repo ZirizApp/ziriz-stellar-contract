@@ -16,7 +16,9 @@
 		"contract:clippy-fix": "cd contract && cargo clippy --  -D clippy::pedantic",
 		"contract:format": "cd contract && cargo fmt",
 		"nft-contract:test": "cd series-contract && cargo test",
-		"nft-contract:build": "cd series-contract && cargo build --target wasm32-unknown-unknown --release"
+		"nft-contract:build": "cd series-contract && cargo build --target wasm32-unknown-unknown --release",
+		"smartdeploy:publish": "cd contract && smartdeploy call smartdeploy --fee 10000 -- publish --contract-name ziriz --wasm-file-path target/wasm32-unknown-unknown/release/ziriz.wasm --author default",
+		"smartdeploy:deploy": "cd contract && smartdeploy call smartdeploy --fee 10000 -- publish --contract-name ziriz --wasm-file-path target/wasm32-unknown-unknown/release/ziriz.wasm--author default"
 	},
 	"author": "dev@ziriz.app",
 	"license": "ISC",

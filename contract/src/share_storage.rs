@@ -1,6 +1,7 @@
 use core::ops::Mul;
 
 use crate::{
+    bump::extend_user_persistent,
     series_storage::{read_fan_cut, read_series_sales},
     storage_types::UserDataKey,
 };
@@ -24,25 +25,35 @@ pub fn map_series_order(env: &Env, account: &Address, id: u128, order_id: u128) 
     env.storage().persistent().set(&key, &tokens);
 }
 
-pub fn read_last_whitdrawn(env: &Env, account: &Address, id: u128) -> u128 {
+pub fn expand_series_order_ttl(env: &Env, account: &Address, id: u128) {
+    let key = UserDataKey::OwnedSeriesOrder(account.clone(), id);
+    extend_user_persistent(env, &key);
+}
+
+pub fn read_last_withdrawn(env: &Env, account: &Address, id: u128) -> u128 {
     let key = UserDataKey::LastClaim(account.clone(), id);
     env.storage().persistent().get(&key).unwrap_or(0)
 }
 
-pub fn write_last_whitdrawn(env: &Env, account: &Address, id: u128, last_whitdrawn: u128) {
+pub fn write_last_withdrawn(env: &Env, account: &Address, id: u128, last_withdrawn: u128) {
     let key = UserDataKey::LastClaim(account.clone(), id);
-    env.storage().persistent().set(&key, &last_whitdrawn);
+    env.storage().persistent().set(&key, &last_withdrawn);
+}
+
+pub fn expand_last_withdrawn_ttl(env: &Env, account: &Address, id: u128) {
+    let key = UserDataKey::LastClaim(account.clone(), id);
+    extend_user_persistent(env, &key);
 }
 
 pub fn get_share_balance(env: &Env, account: &Address, id: u128) -> u128 {
     let mut share: u128 = 0;
     let orders = read_series_order(env, account, id);
     let current_sales = read_series_sales(env, id);
-    let last_whitdrawn = read_last_whitdrawn(env, account, id);
-    if last_whitdrawn < current_sales {
+    let last_withdrawn = read_last_withdrawn(env, account, id);
+    if last_withdrawn < current_sales {
         for order in orders.iter() {
             let fan_cut = read_fan_cut(env, id, order + 1); // next fan cut after this order
-            share += fan_cut.mul(current_sales - last_whitdrawn.max(order)); // your fan cut * number of sales since last whitdrawn
+            share += fan_cut.mul(current_sales - last_withdrawn.max(order)); // your fan cut * number of sales since last withdrawn
         }
     }
     share

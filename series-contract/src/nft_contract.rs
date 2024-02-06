@@ -1,6 +1,7 @@
 use crate::admin_storage::{has_admin, read_admin, write_admin};
+use crate::bump::extend_instance;
 use crate::metadata_storage::{read_name, read_symbol, write_name, write_symbol};
-use crate::token_storage::{increment_balance, increment_supply, read_balance, read_supply};
+use crate::token_storage::{expand_balance_ttl, increment_balance, increment_supply, read_balance, read_supply};
 use crate::utils::NonFungibleTokenTrait;
 use soroban_sdk::{contract, contractimpl, Address, Env, String};
 
@@ -18,14 +19,17 @@ impl NonFungibleTokenTrait for NonFungibleToken {
     }
 
     fn admin(env: Env) -> Address {
+        extend_instance(&env);
         read_admin(&env)
     }
 
     fn name(env: Env) -> String {
+        extend_instance(&env);
         read_name(&env)
     }
 
     fn symbol(env: Env) -> String {
+        extend_instance(&env);
         read_symbol(&env)
     }
 
@@ -40,14 +44,20 @@ impl NonFungibleTokenTrait for NonFungibleToken {
 
         increment_balance(&env, &to);
         increment_supply(&env);
+
+        extend_instance(&env);
     }
 
     fn supply(env: Env) -> u128 {
+        extend_instance(&env);
         read_supply(&env)
     }
 
     #[allow(clippy::cast_possible_wrap)]
     fn balance(env: Env, account: Address) -> i128 {
+        extend_instance(&env);
+        expand_balance_ttl(&env, &account);
+        
         read_balance(&env, &account) as i128
     }
 

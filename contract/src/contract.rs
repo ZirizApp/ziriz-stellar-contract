@@ -1,19 +1,18 @@
 use crate::admin_storage::{has_admin, read_admin, read_wasm, write_admin, write_wasm};
+use crate::bump::{extend_account_series_balance, extend_instance, extend_series};
 use crate::data_type::{Metadata, Series};
 use crate::events::{BuyEvent, ClaimEvent, CreateEvent};
 use crate::metadata_storage::{read_metadata, write_metadata};
-use crate::owner_storage::{read_creator, write_creator, write_creator_curved};
+use crate::owner_storage::{expand_creator_ttl, read_creator, write_creator, write_creator_curved};
 use crate::series_storage::{
-    calculate_price, increment_series_sales, read_fan_base_price, read_series_info,
-    read_series_sales, read_sum_fan_cut, write_fan_base_price, write_fan_cut, write_fan_decay_rate,
-    write_series_price, write_sum_fan_cut,
+    calculate_price, expand_series_sales_ttl, increment_series_sales, read_fan_base_price,
+    read_series_info, read_series_sales, read_sum_fan_cut, write_fan_base_price, write_fan_cut,
+    write_fan_decay_rate, write_series_price, write_sum_fan_cut,
 };
 use crate::share_storage::{
-    get_share_balance, map_series_order, read_last_whitdrawn, write_last_whitdrawn,
+    get_share_balance, map_series_order, read_last_withdrawn, write_last_withdrawn,
 };
-use crate::token_storage::{
-    increment_series, increment_series_balance, read_native_token, read_series, write_native_token,
-};
+use crate::token_storage::{increment_series, read_native_token, read_series, write_native_token};
 use crate::utils::{Client, ZirizCreatorTrait};
 extern crate alloc;
 use alloc::format;
@@ -22,10 +21,6 @@ use soroban_sdk::{contract, contractimpl, log, symbol_short, Address, BytesN, En
 
 mod nft_contract {
     soroban_sdk::contractimport!(file = "src/wasm/ziriz-series.wasm");
-}
-
-mod nft_contract{
-  soroban_sdk::contractimport!(file= "src/wasm/ziriz-series.wasm");
 }
 
 #[contract]
@@ -44,10 +39,12 @@ impl ZirizCreatorTrait for ZirizCreator {
     }
 
     fn admin(env: Env) -> Address {
+        extend_instance(&env);
         read_admin(&env)
     }
 
     fn number_of_series(env: Env) -> u128 {
+        extend_instance(&env);
         read_series(&env)
     }
 
@@ -100,6 +97,8 @@ impl ZirizCreatorTrait for ZirizCreator {
         write_fan_base_price(&env, next_id, fan_base_price);
         write_fan_decay_rate(&env, next_id, fan_decay_rate);
 
+        extend_instance(&env);
+
         log!(
             &env,
             "Series {} created by {} with base price {}",
@@ -123,18 +122,24 @@ impl ZirizCreatorTrait for ZirizCreator {
     }
 
     fn series_info(env: Env, series_id: u128) -> Series {
+        extend_series(&env, series_id);
         read_series_info(&env, series_id)
     }
 
     fn series_sales(env: Env, series_id: u128) -> u128 {
+        expand_series_sales_ttl(&env, series_id);
         read_series_sales(&env, series_id)
     }
 
     fn creator_of(env: Env, series_id: u128) -> Address {
+        expand_creator_ttl(&env, series_id);
         read_creator(&env, series_id)
     }
 
     fn share_balance(env: Env, account: Address, series_id: u128) -> u128 {
+        extend_account_series_balance(&env, &account, series_id);
+        extend_series(&env, series_id);
+
         get_share_balance(&env, &account, series_id)
     }
 
@@ -170,12 +175,14 @@ impl ZirizCreatorTrait for ZirizCreator {
         let nft_client = Client::new(&env, &metadata.issuer);
         nft_client.mint(&env.current_contract_address(), &buyer);
 
-        increment_series_balance(&env, &buyer, series_id);
         let series_order = increment_series_sales(&env, series_id);
         map_series_order(&env, &buyer, series_id, series_order);
         write_sum_fan_cut(&env, series_id, fan_cut);
         write_fan_cut(&env, series_id, series_order, fan_cut - prev_fan_cut);
         let token_id = series_order;
+
+        extend_instance(&env);
+        extend_series(&env, series_id);
 
         log!(
             &env,
@@ -203,16 +210,20 @@ impl ZirizCreatorTrait for ZirizCreator {
     fn claim_share(env: Env, account: Address, series_id: u128) {
         account.require_auth();
 
-        let last_whitdrawn = read_last_whitdrawn(&env, &account, series_id);
+        let last_withdrawn = read_last_withdrawn(&env, &account, series_id);
         let current_sales = read_series_sales(&env, series_id);
-        assert!(last_whitdrawn < current_sales, "No share to claim");
+        assert!(last_withdrawn < current_sales, "No share to claim");
 
         let token_address = read_native_token(&env);
         let token_client = TokenClient::new(&env, &token_address);
         let share = get_share_balance(&env, &account, series_id);
         token_client.transfer(&env.current_contract_address(), &account, &(share as i128));
-        write_last_whitdrawn(&env, &account, series_id, current_sales);
+        write_last_withdrawn(&env, &account, series_id, current_sales);
         log!(&env, "Share {} claimed by {}", share, account);
+
+        extend_account_series_balance(&env, &account, series_id);
+        extend_series(&env, series_id);
+        extend_instance(&env);
 
         env.events().publish(
             (symbol_short!("claim"), account.clone(), series_id),
