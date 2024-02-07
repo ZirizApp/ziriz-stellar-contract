@@ -6,6 +6,7 @@
 		"tsc": "tsc --init",
 		"build": "tsc",
 		"test": "jest",
+		"soroban:show-xlm": "soroban lab token id --asset native --network testnet",
 		"contract:init": "ts-node src/init.ts",
 		"contract:test": "cd contract && cargo test",
 		"contract:build": "cd contract && cargo build --target wasm32-unknown-unknown --release",
