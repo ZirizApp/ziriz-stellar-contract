@@ -21,7 +21,6 @@ pub fn extend_instance(env: &Env) {
     extend_persistent(env, &DataKey::Wasm);
     extend_persistent(env, &DataKey::Series);
     extend_persistent(env, &DataKey::NativeToken);
-    
 }
 
 pub fn extend_persistent(env: &Env, key: &DataKey) {

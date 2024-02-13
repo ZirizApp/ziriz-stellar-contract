@@ -76,7 +76,7 @@ impl ZirizCreatorTrait for ZirizCreator {
 
         let deployed_address = env
             .deployer()
-            .with_address(creator.clone(), salt)
+            .with_address(contract_address, salt)
             .deploy(wasm_hash);
 
         let symbol = String::from_str(&env, format!("ZS{next_id}").as_str());
@@ -158,7 +158,7 @@ impl ZirizCreatorTrait for ZirizCreator {
             assert!(fan_cut > 0, "Fun cut must be greater than 0");
             assert!(
                 fan_cut >= prev_fan_cut,
-                "Fan cut must be greater than previous fan cut"
+                "Fan cut must be greater than/equal previous fan cut"
             );
         }
 
