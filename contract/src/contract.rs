@@ -71,18 +71,19 @@ impl ZirizCreatorTrait for ZirizCreator {
         write_creator(&env, next_id, &creator);
 
         let wasm_hash = read_wasm(&env);
+        let contract_address = env.current_contract_address();
         let salt = BytesN::from_array(&env, &[u8::try_from(next_id).expect("Series Overflow"); 32]);
 
         let deployed_address = env
             .deployer()
-            .with_address(creator.clone(), salt)
+            .with_address(contract_address, salt)
             .deploy(wasm_hash);
 
         let symbol = String::from_str(&env, format!("ZS{next_id}").as_str());
         let nft_client = Client::new(&env, &deployed_address);
         nft_client.init(
             &env.current_contract_address(),
-            &String::from_str(&env, "Ziris Soroban"),
+            &String::from_str(&env, "Ziriz Soroban"),
             &symbol,
         );
 
@@ -156,8 +157,8 @@ impl ZirizCreatorTrait for ZirizCreator {
         if fan_base_price > 0 {
             assert!(fan_cut > 0, "Fun cut must be greater than 0");
             assert!(
-                fan_cut > prev_fan_cut,
-                "Fan cut must be greater than previous fan cut"
+                fan_cut >= prev_fan_cut,
+                "Fan cut must be greater than/equal previous fan cut"
             );
         }
 

@@ -4,11 +4,8 @@ use soroban_sdk::{contracttype, Address};
 #[contracttype]
 pub enum DataKey {
     Admin,
-    Name,
-    Symbol,
     Metadata(u128),
     Owner(u128),
-    Token(u128),
     Price(u128),
     NativeToken,
     Series,
@@ -19,7 +16,6 @@ pub enum DataKey {
     FanCut(u128, u128),
     Creator(u128),
     CreatorCurved(u128),
-    Supply,
     Wasm,
 }
 
