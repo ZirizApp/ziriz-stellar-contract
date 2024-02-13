@@ -6,7 +6,6 @@ pub enum DataKey {
     Admin,
     Name,
     Symbol,
-    Series,
     Supply,
 }
 
