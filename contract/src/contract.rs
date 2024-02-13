@@ -83,7 +83,7 @@ impl ZirizCreatorTrait for ZirizCreator {
         let nft_client = Client::new(&env, &deployed_address);
         nft_client.init(
             &env.current_contract_address(),
-            &String::from_str(&env, "Ziris Soroban"),
+            &String::from_str(&env, "Ziriz Soroban"),
             &symbol,
         );
 
