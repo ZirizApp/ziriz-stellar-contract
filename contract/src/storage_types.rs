@@ -5,7 +5,6 @@ use soroban_sdk::{contracttype, Address};
 pub enum DataKey {
     Admin,
     Metadata(u128),
-    Owner(u128),
     Price(u128),
     NativeToken,
     Series,
@@ -22,10 +21,6 @@ pub enum DataKey {
 #[derive(Clone)]
 #[contracttype]
 pub enum UserDataKey {
-    TokenOwner(u128),
-    OwnedTokens(Address),
     OwnedSeriesOrder(Address, u128),
     LastClaim(Address, u128),
-    Balance(Address),
-    SeriesBalance(Address, u128),
 }
