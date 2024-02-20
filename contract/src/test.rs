@@ -147,15 +147,9 @@ fn test_buy_series_and_claim() {
     }
 
     assert!(nft.share_balance(&user2, &1) > nft.share_balance(&user3, &1));
-    assert_eq!(
-        nft.share_balance(&user2, &1),
-        9_000_000 * (num_of_anon + 1)
-    );
+    assert_eq!(nft.share_balance(&user2, &1), 9_000_000 * (num_of_anon + 1));
 
-    assert_eq!(
-        nft.share_balance(&user3, &1),
-        8_100_000 * (num_of_anon)
-    );
+    assert_eq!(nft.share_balance(&user3, &1), 8_100_000 * (num_of_anon));
 
     nft.claim_share(&user2, &1);
     nft.claim_share(&user3, &1);
