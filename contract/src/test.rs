@@ -42,24 +42,24 @@ fn test_create_series() {
         &user1,
         &String::from_str(&env, "https://www.ziriz.com/1"),
         &10_000_000,
+        &0,
         &10_000_000,
-        &100_000_000,
         &900,
     );
     nft.create_series(
         &user2,
         &String::from_str(&env, "https://www.ziriz.com/2"),
         &10_000_000,
+        &0,
         &10_000_000,
-        &100_000_000,
         &900,
     );
     nft.create_series(
         &user1,
         &String::from_str(&env, "https://www.ziriz.com/3"),
         &10_000_000,
+        &0,
         &10_000_000,
-        &100_000_000,
         &900,
     );
 
@@ -80,8 +80,8 @@ fn test_creator() {
         &user1,
         &String::from_str(&env, "https://www.ziriz.com/1"),
         &10_000_000,
+        &0,
         &10_000_000,
-        &100_000_000,
         &900,
     );
 
@@ -105,14 +105,15 @@ fn test_buy_series_and_claim() {
         &user1,
         &String::from_str(&env, "https://www.ziriz.com/1"),
         &10_000_000,
+        &0,
         &10_000_000,
-        &100_000_000,
         &900,
     );
     assert_eq!(nft.creator_of(&1), user1);
 
     let first_series_info = nft.series_info(&1);
     let nft_1_price = first_series_info.price as i128;
+    assert_eq!(nft_1_price, 10_000_000i128);
     token_admin.mint(&user2, &(nft_1_price + init_balance));
     assert_eq!(token.balance(&user2), (nft_1_price + init_balance));
     nft.buy(&user2, &1);
@@ -122,14 +123,15 @@ fn test_buy_series_and_claim() {
     assert!(series_client.balance(&user2) == 1);
 
     let nft_2_price = second_series_info.price as i128;
+    assert_eq!(nft_2_price, 19_000_000i128);
     assert!(second_series_info.fan_cut > first_series_info.fan_cut);
-    assert!(nft.series_info(&1).price > 10_000_000);
     token_admin.mint(&user3, &(nft_2_price + init_balance));
     assert_eq!(token.balance(&user3), (nft_2_price + init_balance));
     nft.buy(&user3, &1);
     assert_eq!(nft.series_sales(&1), 2);
 
     let mut last_price = nft.series_info(&1).price;
+    assert_eq!(last_price, 27_100_000);
     let mut anon_users: Vec<Address> = Vec::new(&env);
     let num_of_anon = 10;
     for _i in 0..num_of_anon {
@@ -147,8 +149,14 @@ fn test_buy_series_and_claim() {
     assert!(nft.share_balance(&user2, &1) > nft.share_balance(&user3, &1));
     assert_eq!(
         nft.share_balance(&user2, &1),
-        90_000_000 * (num_of_anon + 1)
+        9_000_000 * (num_of_anon + 1)
     );
+
+    assert_eq!(
+        nft.share_balance(&user3, &1),
+        8_100_000 * (num_of_anon)
+    );
+
     nft.claim_share(&user2, &1);
     nft.claim_share(&user3, &1);
     assert_eq!(nft.share_balance(&user2, &1), 0);
