@@ -155,7 +155,6 @@ impl ZirizCreatorTrait for ZirizCreator {
             calculate_price(&env, series_id, current_sales + 1);
 
         if fan_base_price > 0 {
-            assert!(fan_cut > 0, "Fun cut must be greater than 0");
             assert!(
                 fan_cut >= prev_fan_cut,
                 "Fan cut must be greater than/equal previous fan cut"

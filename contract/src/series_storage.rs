@@ -16,11 +16,14 @@ pub fn calculate_price(env: &Env, id: u128, sales: u128) -> (u128, u128, u128) {
     let price = read_series_price(env, id);
     let artist_cut = price + (creator_coefficient * sales);
     let mut total_fan_cut: u128 = read_sum_fan_cut(env, id); // read last fan cut
-    let prev_fan_cut = read_fan_cut(env, id, sales - 1);
-    if total_fan_cut == 0 {
-        total_fan_cut = fan_base_price;
-    } else {
-        total_fan_cut = total_fan_cut.add(prev_fan_cut.mul(decay_rate).div(1000));
+
+    if sales > 1 {
+        let prev_fan_cut = read_fan_cut(env, id, sales - 1);
+        if total_fan_cut == 0 {
+            total_fan_cut = fan_base_price.mul(decay_rate).div(1000);
+        } else {
+            total_fan_cut = total_fan_cut.add(prev_fan_cut.mul(decay_rate).div(1000));
+        }
     }
 
     let total_price = artist_cut + total_fan_cut;
