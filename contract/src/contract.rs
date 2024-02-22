@@ -87,6 +87,8 @@ impl ZirizCreatorTrait for ZirizCreator {
             &symbol,
         );
 
+        nft_client.mint(&env.current_contract_address(), &creator);
+
         let metadata = Metadata {
             data_file_uri: uri.clone(),
             symbol,
