@@ -600,6 +600,19 @@
   optionalDependencies:
     sodium-native "^4.0.1"
 
+"@stellar/stellar-sdk@11.2.0":
+  version "11.2.0"
+  resolved "https://registry.yarnpkg.com/@stellar/stellar-sdk/-/stellar-sdk-11.2.0.tgz#1ddc98f5f6fa9cca8629a83c81e841c996f0287b"
+  integrity sha512-qInRR+mLLl9O/AI6Q+Sr19RZeYJtlNoJQJi3pch5BYoMvVhjO8IU8AhHADP//Zmc2osyogwPuqXBiFdaGlfHWA==
+  dependencies:
+    "@stellar/stellar-base" "10.0.1"
+    axios "^1.6.5"
+    bignumber.js "^9.1.2"
+    eventsource "^2.0.2"
+    randombytes "^2.1.0"
+    toml "^3.0.0"
+    urijs "^1.19.1"
+
 "@tsconfig/node10@^1.0.7":
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/@tsconfig/node10/-/node10-1.0.9.tgz#df4907fc07a886922637b15e02d4cebc4c0021b2"
@@ -1052,8 +1065,8 @@ concat-map@0.0.1:
   version "0.0.0"
   dependencies:
     "@stellar/freighter-api" "1.7.1"
+    "@stellar/stellar-sdk" "11.2.0"
     buffer "6.0.3"
-    stellar-sdk "11.1.0"
 
 convert-source-map@^2.0.0:
   version "2.0.0"
@@ -2246,7 +2259,7 @@ stack-utils@^2.0.3:
   dependencies:
     escape-string-regexp "^2.0.0"
 
-stellar-sdk@11.1.0, stellar-sdk@^11.1.0:
+stellar-sdk@^11.1.0:
   version "11.1.0"
   resolved "https://registry.yarnpkg.com/stellar-sdk/-/stellar-sdk-11.1.0.tgz#04df0be3bfee2ffd1db068c92dc4f3ec27309103"
   integrity sha512-fIdo77ogpU+ecHgs59pk9velpXd4F/ch0DzOI4QZw8zVZApc3oeNWP3+X6ui7BWpeRHAGsP2CHQzBLxm0JTIgg==

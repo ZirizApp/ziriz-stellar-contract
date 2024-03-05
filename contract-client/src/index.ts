@@ -1,4 +1,4 @@
-import { ContractSpec, Address } from 'stellar-sdk';
+import { ContractSpec, Address } from '@stellar/stellar-sdk';
 import { Buffer } from "buffer";
 import { AssembledTransaction, Ok, Err } from './assembled-tx.js';
 import type {
@@ -30,7 +30,7 @@ if (typeof window !== 'undefined') {
 export const networks = {
     testnet: {
         networkPassphrase: "Test SDF Network ; September 2015",
-        contractId: "CCVOMXQFSAI4ZHPTC7TI3GL7SNPCGUBN5JCTHBBJA5MXXMCBDLTWK574",
+        contractId: "CAAH2AUUXIAWIFLC4AG2XZPYPWSPFH2XR4BEK2JSSBKZM5R4C5THYOND",
     }
 } as const
 
@@ -171,7 +171,7 @@ series_id: u128;
 /**
     
     */
-export type DataKey = {tag: "Admin", values: void} | {tag: "Metadata", values: readonly [u128]} | {tag: "Price", values: readonly [u128]} | {tag: "NativeToken", values: void} | {tag: "Series", values: void} | {tag: "SeriesSales", values: readonly [u128]} | {tag: "FanBasePrice", values: readonly [u128]} | {tag: "FanDecayRate", values: readonly [u128]} | {tag: "SumFanCut", values: readonly [u128]} | {tag: "FanCut", values: readonly [u128, u128]} | {tag: "Creator", values: readonly [u128]} | {tag: "CreatorCurved", values: readonly [u128]} | {tag: "Wasm", values: void};
+export type DataKey = {tag: "Admin", values: void} | {tag: "Metadata", values: readonly [u128]} | {tag: "Price", values: readonly [u128]} | {tag: "NativeToken", values: void} | {tag: "Series", values: void} | {tag: "SeriesSales", values: readonly [u128]} | {tag: "FanBasePrice", values: readonly [u128]} | {tag: "FanDecayRate", values: readonly [u128]} | {tag: "SumFanCut", values: readonly [u128]} | {tag: "FanCut", values: readonly [u128, u128]} | {tag: "Creator", values: readonly [u128]} | {tag: "CreatorCurved", values: readonly [u128]} | {tag: "TokenSeries", values: readonly [u128]} | {tag: "Token", values: void};
 
 /**
     
@@ -192,12 +192,12 @@ export class Contract {
             "AAAAAAAAAAAAAAAKaW5pdGlhbGl6ZQAAAAAAAgAAAAAAAAAFYWRtaW4AAAAAAAATAAAAAAAAAAxuYXRpdmVfdG9rZW4AAAATAAAAAA==",
         "AAAAAAAAAAAAAAAFYWRtaW4AAAAAAAAAAAAAAQAAABM=",
         "AAAAAAAAAAAAAAAQbnVtYmVyX29mX3NlcmllcwAAAAAAAAABAAAACg==",
-        "AAAAAAAAAAAAAAANY3JlYXRlX3NlcmllcwAAAAAAAAYAAAAAAAAAB2NyZWF0b3IAAAAAEwAAAAAAAAADdXJpAAAAABAAAAAAAAAACmJhc2VfcHJpY2UAAAAAAAoAAAAAAAAADWNyZWF0b3JfY3VydmUAAAAAAAAKAAAAAAAAAA5mYW5fYmFzZV9wcmljZQAAAAAACgAAAAAAAAAOZmFuX2RlY2F5X3JhdGUAAAAAAAoAAAAA",
+        "AAAAAAAAAAAAAAANY3JlYXRlX3NlcmllcwAAAAAAAAYAAAAAAAAAB2NyZWF0b3IAAAAAEwAAAAAAAAADdXJpAAAAABAAAAAAAAAACmJhc2VfcHJpY2UAAAAAAAoAAAAAAAAADWNyZWF0b3JfY3VydmUAAAAAAAAKAAAAAAAAAA5mYW5fYmFzZV9wcmljZQAAAAAACgAAAAAAAAAOZmFuX2RlY2F5X3JhdGUAAAAAAAoAAAABAAAACg==",
         "AAAAAAAAAAAAAAALc2VyaWVzX2luZm8AAAAAAQAAAAAAAAAJc2VyaWVzX2lkAAAAAAAACgAAAAEAAAfQAAAABlNlcmllcwAA",
         "AAAAAAAAAAAAAAAMc2VyaWVzX3NhbGVzAAAAAQAAAAAAAAAJc2VyaWVzX2lkAAAAAAAACgAAAAEAAAAK",
         "AAAAAAAAAAAAAAAKY3JlYXRvcl9vZgAAAAAAAQAAAAAAAAAJc2VyaWVzX2lkAAAAAAAACgAAAAEAAAAT",
         "AAAAAAAAAAAAAAANc2hhcmVfYmFsYW5jZQAAAAAAAAIAAAAAAAAAB2FjY291bnQAAAAAEwAAAAAAAAAJc2VyaWVzX2lkAAAAAAAACgAAAAEAAAAK",
-        "AAAAAAAAAAAAAAADYnV5AAAAAAIAAAAAAAAABWJ1eWVyAAAAAAAAEwAAAAAAAAAJc2VyaWVzX2lkAAAAAAAACgAAAAA=",
+        "AAAAAAAAAAAAAAADYnV5AAAAAAIAAAAAAAAABWJ1eWVyAAAAAAAAEwAAAAAAAAAJc2VyaWVzX2lkAAAAAAAACgAAAAEAAAAK",
         "AAAAAAAAAAAAAAALY2xhaW1fc2hhcmUAAAAAAgAAAAAAAAAHYWNjb3VudAAAAAATAAAAAAAAAAlzZXJpZXNfaWQAAAAAAAAKAAAAAA==",
         "AAAAAAAAAAAAAAAHdXBncmFkZQAAAAABAAAAAAAAAA1uZXdfd2FzbV9oYXNoAAAAAAAD7gAAACAAAAAA",
         "AAAAAQAAAAAAAAAAAAAACE1ldGFkYXRhAAAAAwAAAAAAAAANZGF0YV9maWxlX3VyaQAAAAAAABAAAAAAAAAABmlzc3VlcgAAAAAAEwAAAAAAAAAGc3ltYm9sAAAAAAAQ",
@@ -205,7 +205,7 @@ export class Contract {
         "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",
-        "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",
+        "AAAAAgAAAAAAAAAAAAAAB0RhdGFLZXkAAAAADgAAAAAAAAAAAAAABUFkbWluAAAAAAAAAQAAAAAAAAAITWV0YWRhdGEAAAABAAAACgAAAAEAAAAAAAAABVByaWNlAAAAAAAAAQAAAAoAAAAAAAAAAAAAAAtOYXRpdmVUb2tlbgAAAAAAAAAAAAAAAAZTZXJpZXMAAAAAAAEAAAAAAAAAC1Nlcmllc1NhbGVzAAAAAAEAAAAKAAAAAQAAAAAAAAAMRmFuQmFzZVByaWNlAAAAAQAAAAoAAAABAAAAAAAAAAxGYW5EZWNheVJhdGUAAAABAAAACgAAAAEAAAAAAAAACVN1bUZhbkN1dAAAAAAAAAEAAAAKAAAAAQAAAAAAAAAGRmFuQ3V0AAAAAAACAAAACgAAAAoAAAABAAAAAAAAAAdDcmVhdG9yAAAAAAEAAAAKAAAAAQAAAAAAAAANQ3JlYXRvckN1cnZlZAAAAAAAAAEAAAAKAAAAAQAAAAAAAAALVG9rZW5TZXJpZXMAAAAAAQAAAAoAAAAAAAAAAAAAAAVUb2tlbgAAAA==",
         "AAAAAgAAAAAAAAAAAAAAC1VzZXJEYXRhS2V5AAAAAAIAAAABAAAAAAAAABBPd25lZFNlcmllc09yZGVyAAAAAgAAABMAAAAKAAAAAQAAAAAAAAAJTGFzdENsYWltAAAAAAAAAgAAABMAAAAK",
         "AAAAAAAAACFSZXR1cm5zIHRoZSBvd25lciBvZiB0aGUgY29udHJhY3QAAAAAAAAJb3duZXJfZ2V0AAAAAAAAAAAAAAEAAAPoAAAAEw==",
         "AAAAAAAAAGhTZXRzIHRoZSBvd25lciBvZiB0aGUgY29udHJhY3QuIElmIG9uZSBhbHJlYWR5IHNldCBpdCB0cmFuc2ZlcnMgaXQgdG8gdGhlIG5ldyBvd25lciwgaWYgc2lnbmVkIGJ5IG93bmVyLgAAAAlvd25lcl9zZXQAAAAAAAABAAAAAAAAAAluZXdfb3duZXIAAAAAAAATAAAAAA==",
@@ -216,12 +216,12 @@ export class Contract {
         initialize: () => {},
         admin: (result: XDR_BASE64): string => this.spec.funcResToNative("admin", result),
         numberOfSeries: (result: XDR_BASE64): u128 => this.spec.funcResToNative("number_of_series", result),
-        createSeries: () => {},
+        createSeries: (result: XDR_BASE64): u128 => this.spec.funcResToNative("create_series", result),
         seriesInfo: (result: XDR_BASE64): Series => this.spec.funcResToNative("series_info", result),
         seriesSales: (result: XDR_BASE64): u128 => this.spec.funcResToNative("series_sales", result),
         creatorOf: (result: XDR_BASE64): string => this.spec.funcResToNative("creator_of", result),
         shareBalance: (result: XDR_BASE64): u128 => this.spec.funcResToNative("share_balance", result),
-        buy: () => {},
+        buy: (result: XDR_BASE64): u128 => this.spec.funcResToNative("buy", result),
         claimShare: () => {},
         upgrade: () => {},
         ownerGet: (result: XDR_BASE64): Option<string> => this.spec.funcResToNative("owner_get", result),
