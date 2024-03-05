@@ -24,7 +24,8 @@ describe('Integrity Test (Testnet)', () => {
 			fan_decay_rate: BigInt(900),
 		})
 
-		await createSeries?.signAndSend()
+		const signedTx = await createSeries?.signAndSend()
+		expect(signedTx?.result).toBeDefined()
 	}, 20000)
 
 	test('buy series', async () => {

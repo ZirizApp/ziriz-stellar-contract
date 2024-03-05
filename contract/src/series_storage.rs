@@ -156,3 +156,4 @@ pub fn expand_fan_cut_ttl(env: &Env, id: u128, order: u128) {
     let key = DataKey::FanCut(id, order);
     extend_persistent(env, &key);
 }
+

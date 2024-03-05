@@ -1,8 +1,8 @@
-use crate::admin_storage::{has_admin, read_admin, read_wasm, write_admin, write_wasm};
+use crate::admin_storage::{has_admin, read_admin, write_admin};
 use crate::bump::{extend_account_series_balance, extend_instance, extend_series};
 use crate::data_type::{Metadata, Series};
 use crate::events::{BuyEvent, ClaimEvent, CreateEvent};
-use crate::metadata_storage::{read_metadata, write_metadata};
+use crate::metadata_storage::write_metadata;
 use crate::owner_storage::{expand_creator_ttl, read_creator, write_creator, write_creator_curved};
 use crate::series_storage::{
     calculate_price, expand_series_sales_ttl, increment_series_sales, read_fan_base_price,
@@ -13,15 +13,11 @@ use crate::share_storage::{
     get_share_balance, map_series_order, read_last_withdrawn, write_last_withdrawn,
 };
 use crate::token_storage::{increment_series, read_native_token, read_series, write_native_token};
-use crate::utils::{Client, ZirizCreatorTrait};
+use crate::utils::ZirizCreatorTrait;
 extern crate alloc;
 use alloc::format;
 use soroban_sdk::token::TokenClient;
 use soroban_sdk::{contract, contractimpl, log, symbol_short, Address, BytesN, Env, String};
-
-mod nft_contract {
-    soroban_sdk::contractimport!(file = "src/wasm/ziriz-series.wasm");
-}
 
 #[contract]
 pub struct ZirizCreator;
@@ -34,8 +30,6 @@ impl ZirizCreatorTrait for ZirizCreator {
 
         write_admin(&env, &admin);
         write_native_token(&env, &native_token);
-        let wasm_hash = env.deployer().upload_contract_wasm(nft_contract::WASM);
-        write_wasm(&env, &wasm_hash);
     }
 
     fn admin(env: Env) -> Address {
@@ -57,7 +51,7 @@ impl ZirizCreatorTrait for ZirizCreator {
         creator_curve: u128,
         fan_base_price: u128,
         fan_decay_rate: u128,
-    ) {
+    ) -> u128 {
         creator.require_auth();
 
         assert!(base_price > 0, "Base price must be greater than 0");
@@ -70,29 +64,12 @@ impl ZirizCreatorTrait for ZirizCreator {
         let next_id = increment_series(&env);
         write_creator(&env, next_id, &creator);
 
-        let wasm_hash = read_wasm(&env);
-        let contract_address = env.current_contract_address();
-        let salt = BytesN::from_array(&env, &[u8::try_from(next_id).expect("Series Overflow"); 32]);
-
-        let deployed_address = env
-            .deployer()
-            .with_address(contract_address, salt)
-            .deploy(wasm_hash);
-
         let symbol = String::from_str(&env, format!("ZS{next_id}").as_str());
-        let nft_client = Client::new(&env, &deployed_address);
-        nft_client.init(
-            &env.current_contract_address(),
-            &String::from_str(&env, "Ziriz Soroban"),
-            &symbol,
-        );
-
-        nft_client.mint(&env.current_contract_address(), &creator);
 
         let metadata = Metadata {
             data_file_uri: uri.clone(),
             symbol,
-            issuer: deployed_address,
+            issuer: creator.clone(),
         };
         write_metadata(&env, next_id, &metadata);
         write_series_price(&env, next_id, base_price);
@@ -122,6 +99,8 @@ impl ZirizCreatorTrait for ZirizCreator {
                 fan_decay_rate,
             },
         );
+
+        next_id
     }
 
     fn series_info(env: Env, series_id: u128) -> Series {
@@ -147,7 +126,7 @@ impl ZirizCreatorTrait for ZirizCreator {
     }
 
     #[allow(clippy::cast_possible_wrap)]
-    fn buy(env: Env, buyer: Address, series_id: u128) {
+    fn buy(env: Env, buyer: Address, series_id: u128) -> u128 {
         buyer.require_auth();
 
         let fan_base_price = read_fan_base_price(&env, series_id);
@@ -172,10 +151,6 @@ impl ZirizCreatorTrait for ZirizCreator {
         if fan_cut > 0 {
             token_client.transfer(&buyer, &env.current_contract_address(), &(fan_cut as i128));
         }
-        let metadata = read_metadata(&env, series_id);
-
-        let nft_client = Client::new(&env, &metadata.issuer);
-        nft_client.mint(&env.current_contract_address(), &buyer);
 
         let series_order = increment_series_sales(&env, series_id);
         map_series_order(&env, &buyer, series_id, series_order);
@@ -206,6 +181,8 @@ impl ZirizCreatorTrait for ZirizCreator {
                 fan_cut,
             },
         );
+
+        token_id
     }
 
     #[allow(clippy::cast_possible_wrap)]

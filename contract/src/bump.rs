@@ -13,12 +13,11 @@ use crate::{
 
 pub const DAY_IN_LEDGERS: u32 = 17280;
 
-pub const PERSISTENT_BUMP_CONSTANT: u32 = DAY_IN_LEDGERS * 180;
-pub const PERSISTENT_BUMP_CONSTANT_THRESHOLD: u32 = DAY_IN_LEDGERS * 90;
+pub const PERSISTENT_BUMP_CONSTANT: u32 = DAY_IN_LEDGERS * 30;
+pub const PERSISTENT_BUMP_CONSTANT_THRESHOLD: u32 = DAY_IN_LEDGERS * 15;
 
 pub fn extend_instance(env: &Env) {
     extend_persistent(env, &DataKey::Admin);
-    extend_persistent(env, &DataKey::Wasm);
     extend_persistent(env, &DataKey::Series);
     extend_persistent(env, &DataKey::NativeToken);
 }

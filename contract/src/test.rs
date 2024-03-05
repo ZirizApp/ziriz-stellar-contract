@@ -101,7 +101,7 @@ fn test_buy_series_and_claim() {
     let (token, token_admin) = create_token(&env, &admin);
     let nft = create_ziriz_app(&env, &admin, &token.address);
 
-    nft.create_series(
+    let series_id = nft.create_series(
         &user1,
         &String::from_str(&env, "https://www.ziriz.com/1"),
         &10_000_000,
@@ -109,6 +109,7 @@ fn test_buy_series_and_claim() {
         &10_000_000,
         &900,
     );
+    assert_eq!(series_id, 1);
     assert_eq!(nft.creator_of(&1), user1);
 
     let first_series_info = nft.series_info(&1);
@@ -119,8 +120,8 @@ fn test_buy_series_and_claim() {
     nft.buy(&user2, &1);
 
     let second_series_info = nft.series_info(&1);
-    let series_client = TokenClient::new(&env, &second_series_info.metadata.issuer);
-    assert!(series_client.balance(&user2) == 1);
+    // let series_client = TokenClient::new(&env, &second_series_info.metadata.issuer);
+    // assert!(series_client.balance(&user2) == 1);
 
     let nft_2_price = second_series_info.price as i128;
     assert_eq!(nft_2_price, 19_000_000i128);

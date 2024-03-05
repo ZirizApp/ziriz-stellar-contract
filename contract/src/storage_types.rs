@@ -15,7 +15,8 @@ pub enum DataKey {
     FanCut(u128, u128),
     Creator(u128),
     CreatorCurved(u128),
-    Wasm,
+    TokenSeries(u128),
+    Token
 }
 
 #[derive(Clone)]
