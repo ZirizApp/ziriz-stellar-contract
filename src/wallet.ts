@@ -1,5 +1,5 @@
 import { Wallet } from 'contract-client'
-import * as StellarSdk from 'stellar-sdk'
+import * as StellarSdk from '@stellar/stellar-sdk'
 
 export type ZirizWalletProps = {
 	network: 'testnet' | 'mainnet'
