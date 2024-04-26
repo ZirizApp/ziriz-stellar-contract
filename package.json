@@ -33,10 +33,10 @@
 		"typescript": "^5.3.3"
 	},
 	"dependencies": {
+		"@stellar/stellar-sdk": "^11.3.0",
 		"axios": "^1.6.5",
 		"bip39": "^3.1.0",
 		"contract-client": "file:./contract-client",
-		"dotenv": "^16.3.1",
-		"stellar-sdk": "^11.1.0"
+		"dotenv": "^16.3.1"
 	}
 }
