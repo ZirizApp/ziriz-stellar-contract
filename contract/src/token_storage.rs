@@ -1,5 +1,5 @@
 use crate::storage_types::DataKey;
-use soroban_sdk::{Address, Env};
+use crate::soroban_sdk::{Address, Env};
 
 pub fn write_native_token(e: &Env, native_token: &Address) {
     let key = DataKey::NativeToken;

@@ -1,7 +1,7 @@
 use crate::bump::extend_persistent;
 use crate::data_type::Metadata;
 use crate::storage_types::DataKey;
-use soroban_sdk::Env;
+use crate::soroban_sdk::Env;
 
 pub fn read_metadata(e: &Env, id: u128) -> Metadata {
     let key = DataKey::Metadata(id);

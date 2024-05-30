@@ -16,12 +16,10 @@ use crate::token_storage::{increment_series, read_native_token, read_series, wri
 use crate::utils::{Client, ZirizCreatorTrait};
 extern crate alloc;
 use alloc::format;
-use soroban_sdk::token::TokenClient;
-use soroban_sdk::{contract, contractimpl, log, symbol_short, Address, BytesN, Env, String};
+use crate::soroban_sdk::token::TokenClient;
+use crate::soroban_sdk::{self, contract, contractimpl, log, symbol_short, Address, BytesN, Env, String};
 
-mod nft_contract {
-    soroban_sdk::contractimport!(file = "src/wasm/ziriz-series.wasm");
-}
+loam_sdk::import_contract!(ziriz_series);
 
 #[contract]
 pub struct ZirizCreator;
@@ -29,13 +27,14 @@ pub struct ZirizCreator;
 #[allow(clippy::cast_possible_truncation)]
 #[contractimpl]
 impl ZirizCreatorTrait for ZirizCreator {
+    /// Comment here
     fn initialize(env: Env, admin: Address, native_token: Address) {
         assert!(!has_admin(&env), "already initialized");
-
         write_admin(&env, &admin);
         write_native_token(&env, &native_token);
-        let wasm_hash = env.deployer().upload_contract_wasm(nft_contract::WASM);
+        let wasm_hash = env.deployer().upload_contract_wasm(ziriz_series::WASM);
         write_wasm(&env, &wasm_hash);
+        crate::Contract__::owner_set(env, admin);
     }
 
     fn admin(env: Env) -> Address {

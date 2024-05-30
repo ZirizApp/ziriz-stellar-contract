@@ -1,5 +1,5 @@
 use crate::{bump::extend_user_persistent, storage_types::{DataKey, UserDataKey}};
-use soroban_sdk::{Address, Env};
+use crate::soroban_sdk::{Address, Env};
 
 pub fn read_supply(e: &Env) -> u128 {
     let key = DataKey::Supply;

@@ -1,4 +1,4 @@
-use soroban_sdk::{contracttype, Address, String};
+use crate::soroban_sdk::{self, contracttype, Address, String};
 
 #[contracttype]
 #[derive(Clone, Debug)]
