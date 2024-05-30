@@ -1,5 +1,7 @@
 #![no_std]
 
+pub(crate) use loam_sdk::soroban_sdk;
+
 mod admin_storage;
 mod bump;
 mod contract; // creagor module

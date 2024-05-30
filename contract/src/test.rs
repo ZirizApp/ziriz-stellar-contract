@@ -4,8 +4,7 @@ extern crate std;
 use core::ops::Add;
 
 use crate::{contract::ZirizCreator, contract::ZirizCreatorClient};
-use soroban_sdk::{
-    testutils::{Address as _, Logs},
+use crate::soroban_sdk::{testutils::{Address as _, Logs},
     token::{StellarAssetClient, TokenClient},
     Address, Env, String, Vec,
 };
@@ -157,7 +156,7 @@ fn test_buy_series_and_claim() {
     assert_eq!(nft.share_balance(&user3, &1), 0);
 
     let mut no_balance_users = 0;
-    for (_i, anon_user) in anon_users.iter().enumerate() {
+    for anon_user in anon_users {
         let balance = nft.share_balance(&anon_user, &1);
         if balance > 0 {
             nft.claim_share(&anon_user, &1);

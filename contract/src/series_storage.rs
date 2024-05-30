@@ -7,7 +7,7 @@ use crate::{
     owner_storage::{read_creator, read_creator_curved},
     storage_types::DataKey,
 };
-use soroban_sdk::Env;
+use crate::soroban_sdk::Env;
 
 pub fn calculate_price(env: &Env, id: u128, sales: u128) -> (u128, u128, u128) {
     let fan_base_price = read_fan_base_price(env, id);

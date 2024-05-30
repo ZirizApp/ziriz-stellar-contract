@@ -8,3 +8,4 @@ contract/test_snapshots
 series-contract/test_snapshots
 dist
 .env
+target/

@@ -1,4 +1,4 @@
-use soroban_sdk::{Address, Env, String};
+use crate::soroban_sdk::{Address, Env, String};
 
 pub trait NonFungibleTokenTrait {
     fn init(env: Env, admin: Address, name: String, symbol: String);

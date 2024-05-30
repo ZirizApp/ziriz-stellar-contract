@@ -1,6 +1,6 @@
 #![cfg(test)]
 
-use soroban_sdk::{testutils::Address as _, Address, Env, String};
+use crate::soroban_sdk::{testutils::Address as _, Address, Env, String};
 
 use crate::{nft_contract::NonFungibleToken, nft_contract::NonFungibleTokenClient};
 
@@ -9,7 +9,7 @@ fn create_nft_token<'a>(
   admin: &Address,
 ) -> NonFungibleTokenClient<'a> {
   let contract = NonFungibleTokenClient::new(env, &env.register_contract(None, NonFungibleToken {}));
-  contract.init(&admin, &String::from_str(env, "Ziris Soroban"), &String::from_str(env, "ZS1"));
+  contract.init(admin, &String::from_str(env, "Ziris Soroban"), &String::from_str(env, "ZS1"));
   contract
 }
 

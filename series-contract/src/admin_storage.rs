@@ -1,5 +1,5 @@
 use crate::storage_types::DataKey;
-use soroban_sdk::{Address, Env};
+use crate::soroban_sdk::{Address, Env};
 
 pub fn has_admin(e: &Env) -> bool {
     let key = DataKey::Admin;

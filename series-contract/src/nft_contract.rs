@@ -3,19 +3,20 @@ use crate::bump::extend_instance;
 use crate::metadata_storage::{read_name, read_symbol, write_name, write_symbol};
 use crate::token_storage::{expand_balance_ttl, increment_balance, increment_supply, read_balance, read_supply};
 use crate::utils::NonFungibleTokenTrait;
-use soroban_sdk::{contract, contractimpl, Address, Env, String};
+use crate::soroban_sdk::{self, contract, contractimpl, Address, Env, String};
 
 #[contract]
 pub struct NonFungibleToken;
 
 #[contractimpl]
 impl NonFungibleTokenTrait for NonFungibleToken {
+    /// Does comment show up?
     fn init(env: Env, admin: Address, name: String, symbol: String) {
         assert!(!has_admin(&env), "already initialized");
-
         write_admin(&env, &admin);
         write_name(&env, &name);
         write_symbol(&env, &symbol);
+        crate::Contract__::owner_set(env, admin);
     }
 
     fn admin(env: Env) -> Address {
@@ -58,13 +59,15 @@ impl NonFungibleTokenTrait for NonFungibleToken {
         extend_instance(&env);
         expand_balance_ttl(&env, &account);
         
-        read_balance(&env, &account) as i128
+        read_balance(&env, &account).try_into().unwrap()
     }
 
+    #[allow(unused_variables)]
     fn transfer(_env: Env, from: Address, to: Address, id: u128) {
         panic!("Can not transfer NFTs");
     }
 
+    #[allow(unused_variables)]
     fn transfer_from(_env: Env, from: Address, to: Address, id: u128) {
         panic!("Can not transfer NFTs");
     }
